@@ -13,7 +13,7 @@ import boy from "./Download_premium_png_of_PNG_Reading_holding_student_book_by_K
 import qiyshiq_arrow from "./arr.png";
 import arr2 from "./arr2.png";
 import green_point from "./green_point.png";
-import active_user from "./active-users.png";
+import active_user from "./active-users.jpg";
 
 const ForStudents = () => {
   const isDisabled = true;

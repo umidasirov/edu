@@ -1,23 +1,25 @@
-import React from 'react';
+import React from "react";
+import { Link } from "react-router-dom";
+import banner from "./imtihon.jpg";
 import "./banner.scss";
-import { Link } from 'react-router-dom';
-import banner from "./a.jpg";
+
 const Banner = () => {
     return (
-        <div id='banner'>
-            <img src={banner} alt="" />
+        <section id="banner">
+            <img src={banner} alt="Attestatsiya kurslari" />
+            <div className="overlay" />
             <div className="text-container">
-                <div className="text-container-left">
+                <div className="text-content">
                     <h1>
-                        Ustozlar uchun attestatsiya imtihonlariga sifatli tayyorlov kurslari tez orada ishga tushadi.<span><Link to="/teachers/attestatsiya-kurslari">O‘zingizni sinab ko‘ring</Link></span>
+                        Ustozlar, bilimlaringizni sinab ko‘rish va rivojlantirish vaqti keldi!
                     </h1>
+                    <Link to="/toifa-imtihonlari" className="cta-btn">
+                        O‘zingizni sinab ko‘ring
+                    </Link>
                 </div>
-                {/* <div className="text-container-right">
-                    <button>Tekshirib ko'rish</button>
-                </div> */}
             </div>
-        </div>
-    )
-}
+        </section>
+    );
+};
 
-export default Banner
+export default Banner;

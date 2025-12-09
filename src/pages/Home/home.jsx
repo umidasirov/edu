@@ -40,7 +40,7 @@ const Home = () => {
   return (
     <div>
       <ForStudents />
-      <SchoolsTests />
+      {/* <SchoolsTests /> */}
       <TeachersTest />
       <Banner />
       <High_rating />
