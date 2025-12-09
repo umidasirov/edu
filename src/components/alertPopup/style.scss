@@ -1,0 +1,40 @@
+#all {
+  max-width: 500px;
+
+  a {
+    color: #179f5d;
+  }
+
+  #tt {
+    margin-top: -12px;
+  }
+
+  .close-btn {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-start;
+
+    button {
+      background-color: transparent !important;
+      font-size: 30px;
+      border: none;
+      width: 35px;
+      height: 35px;
+      transform: rotate(45deg);
+      position: relative;
+      top: -10px;
+      right: -10px;
+      cursor: pointer;
+    }
+  }
+}
+
+@media screen and (max-width: 500px) {
+    #all {
+        width: 100%;
+        margin: 0 10px;
+
+        font-size: 15px;
+    }   
+}

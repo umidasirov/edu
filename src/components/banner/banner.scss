@@ -1,0 +1,125 @@
+#banner {
+    height: 400px;
+    width: 90%;
+    margin: 0 auto;
+    max-width: 1140px;
+    position: relative;
+    margin-top: 70px;
+    border-radius: 50px;
+    overflow: hidden;
+    
+    img {
+        object-fit: cover;
+        object-position: bottom;
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 100%;
+        height: 100%;
+
+    }
+    &::before {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        content: "";
+        background-color: #00000044;
+        z-index: 1;
+    }
+
+    .text-container {
+        position: absolute;
+        bottom: 20px;
+        z-index: 2;
+        background-color: #fff;
+        height: 150px;
+        width: 97%;
+        left: 50%;
+        border-radius: 35px;
+        transform: translateX(-50%);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 25px 30px;
+
+        .text-container-left {
+            width: 100%;
+            h1 {
+                font-weight: 500;
+                font-size: 30px;
+                position: relative;
+                line-height: 35px;
+                text-align: center;
+                
+                span {
+                    position: relative;
+                    top: -3px;
+                    font-size: 14px;
+                    font-weight: 500;
+                    background-color: #fdbd2c;
+                    padding: 7px 10px;
+                    border-radius: 20px;
+
+                    a {
+                        color: #fff;
+                    }
+                }
+            }
+        }
+
+        .text-container-right {
+            height: 100%;
+            width: 200px;
+            display: flex;
+            align-items: flex-end;
+            justify-content: flex-end;
+
+            button {
+                background-color: #00b00e;
+                padding: 12px 17px;
+                border-radius: 25px;
+                border: none;
+                font-size: 16px;
+                color: #fff;
+                font-weight: 500;
+                cursor: pointer;
+
+                &:hover {
+                    background-color: #048f0f;
+                }
+            }
+        }
+    }
+
+
+}
+
+@media screen and (max-width: 500px) {
+    #banner {
+        height: 500px;
+        border-radius: 17px;
+        .text-container {
+            border-radius: 17px;
+            width: 92%;
+            height: auto;
+            flex-direction: column;
+            padding: 25px 20px;
+            row-gap: 35px;
+
+            .text-container-left {
+                width: 100%;
+                
+                h1 {
+                    font-size: 22px;
+                }
+            }
+
+            .text-container-right {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    }
+}

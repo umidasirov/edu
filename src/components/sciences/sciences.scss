@@ -1,0 +1,90 @@
+#sciences-section {
+    // min-height: 100vh;
+
+    .sciences-container {
+        margin: 0 auto;
+        max-width: 1366px;
+
+        #heading-1 {
+            text-align: center;
+            font-size: 40px;
+            font-family: "Anek Odia", sans-serif;
+        }
+    
+        #text-1 {
+            font-size: 18px;
+            text-align: center;
+            font-family: "Anek Odia", sans-serif;
+        }
+    
+        .sciences-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            padding: 20px 40px;
+            row-gap: 30px;
+    
+            .sciences-items {
+                display: flex;
+                justify-content: space-between;
+                gap: 20px;
+                border: 2px solid #00F17E;
+                padding: 20px;
+                border-radius: 10px;
+                color: #00F17E;
+                // box-shadow: 0 0 10px 0 #00000054;
+                
+                &:hover {
+                    box-shadow: unset;
+                }
+
+                img {
+                    width: 120px;
+                    height: 120px;
+                    border-radius: 8px;
+                }
+    
+                .texts{
+                    h1 {
+                        font-size: 29px;
+                    }
+    
+                    ul {
+                        li {
+                            display: flex;
+                            justify-content: space-between;
+                            align-items: center;
+                            gap: 10px;
+
+                            .green {
+                                width: 10px;
+                                height: 10px;
+                                background-color: rgba(0, 100, 0, 0.582);
+                                display: inline-block;
+                                border-radius: 50%;
+                                margin-right: 5px;
+                            }
+    
+                            .count {
+                                color: #01783FE0 !important;
+                                font-weight: 600;
+                            }
+                              
+                        }
+                    }
+                }
+            }
+        }
+        
+        // .line-container {
+        //     box-shadow: inset 0 0 5px 1px #fff,
+        //                 inset 0 0 10px 2px #fff,
+        //                 inset 0 0 20px 4px #fff;
+            
+        //     .line {
+        //         height: 5px;
+        //         background-color: #000;
+        //     }
+        // }
+    }
+}

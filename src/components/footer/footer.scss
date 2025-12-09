@@ -1,0 +1,130 @@
+footer {
+
+    .line {
+        height: 2px;
+        background-image: linear-gradient(to left, #fff, #000, #fff);
+        margin-top: 70px;
+    }
+    
+    .footer-container {
+        display: flex;
+        justify-content: space-around;
+        margin-top: 40px;
+        padding: 0 20px;
+        max-width: 1366px;
+        margin: 40px auto 0;
+
+        ul {
+            text-align: center;
+
+            .first-child {
+                margin-top: 10px;
+            }
+
+            li {
+                margin-top: 10px;
+
+                &.social-links {
+                    padding-left: 0;
+                    // height: 100px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    gap: 10px;
+                    // max-width: 1366px;
+                    // margin: 0 auto;
+            
+                    img {
+                        width: 40px;
+            
+                        &:hover {
+                            opacity: .6;
+                        }
+                    }
+                }
+                
+                &.stores {
+                    display: flex;
+                    align-items: center;
+                }
+
+                img {
+                    width: 100px;
+
+                }
+
+                #play-market {
+                    // margin-left: 5px;
+                    position: relative;
+                    // top: -1px;
+                    // height: 33px;
+                }
+
+                a {
+                    color: #00000099;
+
+                    &:hover {
+                        color: #000;
+                    }
+                }
+            }
+        }
+    }
+
+    
+    .created-by {
+        background-color: #073C8B;
+        height: 50px;
+        margin-top: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        font-family: "Inria Sans", sans-serif;
+        font-size: 20px;
+        font-style: italic;
+        gap: 3px;
+        
+        a {
+            color: #fff;
+
+            &:hover {
+                opacity: .6;
+            }
+        }
+    }
+}
+
+@media screen and (max-width: 500px) {
+    footer {
+        background-color: #073C8B;
+        .footer-container {
+            ul {
+                display: none;
+                
+                &:first-child {
+                    display: unset;
+
+                    & * {
+                        color: #fff;
+                    }
+
+                    li {
+                        &.social-links {
+                            padding-left: 0;
+                            justify-content: center;
+                    
+                            img {
+                                width: 40px;
+                    
+                                &:hover {
+                                    opacity: .6;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }       
+    }
+}

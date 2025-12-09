@@ -1,0 +1,300 @@
+#signup-section {
+    min-height: 100vh;
+    background-color: #0b0e1f;
+    padding-bottom: 20px;
+
+    .section-header {
+        position: relative;
+        width: 100%;
+        margin: 0 auto;
+        padding-top: 20px;
+        color: #fff;
+        max-width: 1092px;
+
+        h1 {
+            font-size: 36px;
+            font-family: "Vast Shadow", serif;
+            text-align: center;
+            
+            span {
+                font-family: "Vast Shadow", serif;
+                color: #FAFF00;
+            }
+        }
+
+        p {
+            color: #FFFFFF80;
+            text-align: center;
+        }
+    }
+
+    .signup-container {
+        max-width: 809px;
+        margin: 0 auto;
+        background-color: #D9D9D933;
+        width: 60%;
+        padding: 20px 40px;
+        border-radius: 1rem;
+        margin-top: 30px;
+
+        h1 {
+            color: #fff;
+            text-align: center;
+            font-family: "Anek Odia", sans-serif;
+        }
+
+        .line {
+            width: 99%;
+            margin: 0 auto;
+            background-image: linear-gradient(to left, #D9D9D933, #D9D9D933, #fff, #D9D9D933, #D9D9D933);
+            height: 2px;
+        }
+
+        .steps {
+            h2 {
+                text-align: center;
+                font-size: 22px;
+                color: #ffff;
+                margin: 10px 0;
+            }
+            input {
+                width: 100%;
+                padding: 10px;
+                border-radius: 7px;
+                border: 1px solid #1AD07980;
+                background-color: transparent;
+                outline: 0;
+                color: #FFFFFF66;
+                font-size: 16px;
+                height: 45px;
+
+                &::placeholder {
+                    color: #FFFFFF66;
+                }
+            }
+
+            .sms-limit-error {
+                background-color: rgba(255, 0, 0, 0.205);
+                color: #fff;
+                padding: 7px;
+                border-radius: 5px;
+                margin-top: 15px;
+            }
+
+            .resend-section {
+                background-color: rgba(72, 255, 0, 0.205);
+                color: #fff;
+                padding: 7px;
+                border-radius: 5px;
+                margin-top: 15px;
+                display: flex;
+                gap: 5px;
+
+                button {
+                    background-color: transparent;
+                    position: unset;
+                    box-shadow: unset;
+                    width: unset;
+                    height: unset;
+                    padding: unset;
+                    margin: 0;
+                    font-size: 16px;
+                }
+            }
+
+            #sms-err {
+                background-color: rgba(255, 0, 0, 0.205);
+                color: #fff;
+                padding: 7px;
+                border-radius: 5px;
+                margin-top: 15px;
+            }
+
+            #back {
+                background-color: transparent;
+                box-shadow: unset;
+            }
+
+            .to-right {
+                display: flex;
+                justify-content: flex-end;
+                width: 100%;
+
+                button {
+                    transform: unset !important;
+                    left: unset !important;
+                }
+            }
+
+            .code-field {
+                display: flex;
+                justify-content: center;
+                gap: 10px;
+
+                input {
+                    width: 40px;
+                    text-align: center;
+                }
+            }
+        }
+
+        .content {
+            margin-top: 25px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: space-between;
+
+            .input-row {
+                width: 48%;
+
+                &.err-border {
+                    input, select {
+                        border-color: red;
+                    }
+                }
+
+                .error {
+                    color: red;
+                }
+                input {
+                    width: 100%;
+                    padding: 10px;
+                    border-radius: 7px;
+                    border: 1px solid #1AD07980;
+                    background-color: transparent;
+                    outline: 0;
+                    color: #FFFFFF66;
+                    font-size: 16px;
+                    height: 45px;
+
+                    &::placeholder {
+                        color: #FFFFFF66;
+                    }
+                }
+
+                select {
+                    width: 100%;
+                    padding: 0 10px;
+                    border-radius: 7px;
+                    border: 1px solid #1AD07980;
+                    background-color: transparent;
+                    outline: 0;
+                    color: #FFFFFF66;
+                    cursor: pointer;
+                    font-size: 16px;
+                    padding-right: 20px;
+                    height: 45px;
+
+                    option {
+                        color: #fff;
+                        background-color: #000000b2;
+
+                        &[disabled] {
+                            color: #FFFFFF66;
+                        }
+                    }
+                }
+            }
+        }
+
+        .forgot-pass {
+            display: flex;
+            width: 100%;
+            justify-content: space-between;
+            margin-top: 20px;
+
+            p {
+                color: #FFFFFF;
+
+                a {
+                    color: #FAFF00;
+                    text-decoration: underline;
+                }
+            }
+
+            a {
+                color: #fff;
+
+                &:hover {
+                    text-decoration: underline !important;
+                }
+            }
+
+        }
+
+        button {
+            background-color: #1AD079;
+            padding: 9px 40px 4px;
+            // position: relative;
+            // left: 50%;
+            // transform: translateX(-50%);
+            margin-top: 20px;
+            border-radius: 8px;
+            border: 0;
+            cursor: pointer;
+            color: #fff;
+            font-size: 18px;
+            font-weight: 600;
+            box-shadow: 0 0 5px #1AD079,
+                0 0 10px #1AD079;
+            font-family: "Anek Odia", sans-serif;
+
+            &:hover {
+                box-shadow: unset;
+            }
+        }
+    }
+
+}
+
+@media screen and (max-width: 500px) {
+    #signup-section {
+    
+        .section-header {
+            padding: 20px;
+
+            h1 {
+                text-align: left;
+                font-size: 20px;
+            }
+
+            p {
+                text-align: left;
+                width: 100%;
+                font-size: 15px;
+                margin-top: 10px;
+            }
+        }
+        .signup-container {
+            background-color: transparent;
+            width: 100%;
+            margin-top: 0;
+            padding-top: 0;
+
+            form {
+                .content {
+                    .input-row {
+                        width: 100%;
+                    }
+                }
+            }
+
+            .forgot-pass {
+                p, a {
+                    font-size: 12px;
+                }
+            }
+
+            .steps {
+                h2 {
+                    font-size: 15px;
+                }
+
+                .to-right {
+                    justify-content: center;
+                }
+            }
+        }
+    }   
+}

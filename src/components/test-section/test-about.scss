@@ -1,0 +1,61 @@
+#test-section {
+    padding: 20px;
+    max-width: 1366px;
+    margin: 0 auto;
+
+    h1 {
+        text-align: center;
+        font-size: 40px;
+
+        span {
+            color: #1AD079E0;
+            text-decoration: underline;
+        }
+    }
+
+    .test-about-container {
+        display: flex;
+        margin-top: 40px;
+
+        .left {
+            width: 50%;
+            
+            img {
+                width: 80%;
+            }
+        }
+
+        .right {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+
+            #down-arrow {
+                width: 25px;
+                margin-left: 18px;
+            }
+
+            .right-item {
+                display: flex;
+                align-items: center;
+                gap: 20px;
+
+                .text {
+                    h2 {
+                        font-family: "Averia Gruesa Libre", system-ui;
+                        font-weight: 400;
+                    }
+                    
+                    p {
+                        font-family: "Anek Oida", sans-serif;
+                    }
+                }
+                
+                .numbers { 
+                    width: 60px;
+                }
+            }
+            
+        }
+    }
+}

@@ -1,0 +1,113 @@
+#paid-courses-section {
+    padding: 20px;
+    max-width: 1366px;
+    margin: 0 auto;
+
+    h1 {    
+        text-align: center;
+        font-size: 40px;
+
+        span {
+            text-decoration: underline;
+            color: #34D589;
+        }
+    }
+    
+    .paid-courses-container {
+        background-color: #fff;
+        padding: 20px;
+        box-shadow: 0 0 15px 1px #00000040;
+        border-radius: 1rem;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        row-gap: 25px;
+        margin-top: 40px;
+        
+        .container-item {
+            background-color: #F6F8FB;
+            padding: 20px;
+            font-family: "Anek Odia", sans-serif;
+            border-radius: 1rem;
+            width: 49%;
+            position: relative;
+            padding-bottom: 80px;
+
+            .item-header {
+                display: flex;
+                gap: 15px;
+                align-items: center;
+
+                img {
+                    width: 50px;
+                }
+            }
+
+            ul {
+                margin-top: 20px;
+
+                li {
+                    display: flex;
+                    align-items: center;
+                    gap: 5px;
+
+                    span {
+                        font-weight: 600;
+                    }
+
+                    img {
+                        width: 30px;
+                    }
+                }
+            }
+
+            a {
+                border-radius: 7px;
+                border: 1px solid #1AD079;
+                display: flex;
+                align-items: center;
+                justify-content: space-evenly;
+                width: 130px;
+                padding: 7px 10px;
+                margin-top: 20px;
+                color: #000;
+                justify-content: center;
+                gap: 5px;
+                position: absolute;
+                bottom: 20px;
+
+                &:hover {
+                    background-color: #1ad07828;
+                }
+
+                svg {
+                    width: 25px;
+                    height: 25px;
+                    stroke: #1AD079 !important;
+                }
+            }
+        }
+    }
+}
+
+@media screen and (max-width: 500px) {
+    #paid-courses-section {
+
+        h1 {
+            font-size: 28px;
+        }
+        .paid-courses-container {
+            flex-direction: column;
+            background-color: transparent;
+            box-shadow: unset;
+            margin-top: 0;
+            padding: 0;
+            padding-top: 20px;
+            
+            .container-item {
+                background-color: #ffff;
+                width: 100%;
+            }
+        }
+    }
+}

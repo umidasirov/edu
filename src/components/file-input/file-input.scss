@@ -1,0 +1,19 @@
+.input-row.file {
+    margin-bottom: 10px;
+    label {
+        font-size: 15px;
+        color: #444;
+    }
+    .file-label {
+        font-size: 15px;
+        height: 40px;
+        outline: none;
+        border-radius: 5px;
+        border: 2px solid #99999991;
+        padding: 0 5px;
+        cursor: pointer;
+        width: 100%;
+        display: flex;
+        align-items: center;
+    }
+}

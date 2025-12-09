@@ -1,0 +1,110 @@
+#science-detail {
+  background-color: #f6f8fb;
+
+  .science-detail-container {
+    max-width: 1366px;
+    margin: 0 auto;
+    background-color: #f5f9ff;
+    box-shadow: -10px 0px 10px rgba(0, 0, 0, 0.3),
+      10px 0px 10px rgba(0, 0, 0, 0.3);
+    padding: 20px;
+    border-radius: 0 0 7px 7px;
+
+    h1 {
+      text-align: center;
+      font-weight: 500;
+    }
+
+    .detail-inner {
+      width: 420px;
+      margin: 0 auto;
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 5px;
+
+      h2 {
+        text-align: center;
+        font-weight: 500;
+      }
+
+      .linee {
+        width: 100%;
+        height: 2px;
+        background: linear-gradient(to left, #ffffff, #179c5c, #ffffff);
+        margin: 5px 0;
+      }
+
+      form {
+        .input-row {
+          & > label,
+          & > span {
+            margin: 0 auto;
+
+            &::selection {
+              background-color: #fff;
+            }
+          }
+
+          .replaced-input {
+            width: 100%;
+            height: 40px;
+            border-radius: 5px;
+            border: 2px solid rgba(153, 153, 153, 0.568627451);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 10px;
+
+            .buttons {
+              display: flex;
+              gap: 5px;
+
+              span::selection {
+                background-color: transparent;
+              }
+            }
+          }
+
+          .d-none {
+            display: none;
+          }
+
+          .themes {
+            border: 1px solid #e0dcdc;
+            padding: 5px 10px;
+            border-radius: 7px;
+            .theme-row {
+              display: flex;
+              align-items: center;
+              gap: 5px;
+            }
+          }
+
+          button {
+            background-color: #1ad079;
+            width: 200px;
+            height: 40px;
+            border-radius: 5px;
+            cursor: pointer;
+            color: #fff;
+            font-size: 16px;
+            margin: 0 auto;
+            border: none;
+          }
+        }
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 500px) {
+    #science-detail {
+        background-color: #f6f8fb;
+      
+        .science-detail-container {
+            .detail-inner {
+                width: 100%;
+            }           
+        }
+    }
+}
