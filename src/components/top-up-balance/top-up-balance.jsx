@@ -203,16 +203,28 @@ const BalanceTopUp = ({ user }) => {
             ></button>
           </div>
           <div className={`top-up-modal ${getLanguageClass()}`}>
-            <div id="inp-w-s" className={getLanguageClass()}>
+            <div id="inp-w-s" className={`wallet-input ${getLanguageClass()}`} style={{ position: "relative" }}>
+              <i className="fas fa-wallet" style={{
+                position: "absolute",
+                left: "10px",
+                top: "50%",
+                transform: "translateY(-50%)",
+                fontSize: "18px",
+                color: "#555",
+                pointerEvents: "none"
+              }}></i>
+
               <input
                 type="text"
-                placeholder={t.enterAmount}
+                placeholder={t.amountPlaceholder}
                 name="total_cost"
                 value={formatAmount(amount)}
                 onChange={handleChange}
                 className={getLanguageClass()}
+                style={{ paddingLeft: "35px" }}
               />
-              <span className={getLanguageClass()}>{t.currency}</span>
+
+              <span className={getLanguageClass()} style={{ marginLeft: "5px" }}>{t.currency}</span>
             </div>
 
             <div className={`quick-amounts ${getLanguageClass()}`}>
@@ -233,7 +245,7 @@ const BalanceTopUp = ({ user }) => {
                   );
                 })}
               </div>
-            </div>  
+            </div>
 
             <p
               style={{

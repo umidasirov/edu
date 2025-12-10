@@ -26,7 +26,7 @@ const BalanceTopUp = () => {
       paymentVia: "orqali",
       payme: "Payme",
       click: "Click",
-      amountPlaceholder: "Summani kiriting (so'm)",
+      amountPlaceholder: "Summani kiriting",
       currency: "so'm",
       errorMinAmount: "Minimal 5 000 so'm kiriting!",
       errorInvalidAmount: "Iltimos, to'g'ri summa kiriting!",
@@ -43,7 +43,7 @@ const BalanceTopUp = () => {
       paymentVia: "через",
       payme: "Payme",
       click: "Click",
-      amountPlaceholder: "Введите сумму (сум)",
+      amountPlaceholder: "Введите сумму",
       currency: "сум",
       errorMinAmount: "Минимальная сумма 5 000 сум!",
       errorInvalidAmount: "Пожалуйста, введите правильную сумму!",
@@ -60,7 +60,7 @@ const BalanceTopUp = () => {
       paymentVia: "via",
       payme: "Payme",
       click: "Click",
-      amountPlaceholder: "Enter amount (UZS)",
+      amountPlaceholder: "Enter amount",
       currency: "UZS",
       errorMinAmount: "Minimum amount is 5 000 UZS!",
       errorInvalidAmount: "Please enter a valid amount!",
@@ -186,9 +186,17 @@ const BalanceTopUp = () => {
             ></button>
           </div>
           <div className={`top-up-modal ${getLanguageClass()}`}>
-            {/* Tezkor summalar qismi */}
+            <div id="inp-w-s" className={`wallet-input ${getLanguageClass()}`} style={{ position: "relative" }}>
+              <i className="fas fa-wallet" style={{
+                position: "absolute",
+                left: "10px",
+                top: "50%",
+                transform: "translateY(-50%)",
+                fontSize: "18px",
+                color: "#555",
+                pointerEvents: "none"
+              }}></i>
 
-            <div id="inp-w-s" className={getLanguageClass()}>
               <input
                 type="text"
                 placeholder={t.amountPlaceholder}
@@ -196,8 +204,10 @@ const BalanceTopUp = () => {
                 value={formatAmount(amount)}
                 onChange={handleChange}
                 className={getLanguageClass()}
+                style={{ paddingLeft: "35px" }}
               />
-              <span className={getLanguageClass()}>{t.currency}</span>
+
+              <span className={getLanguageClass()} style={{ marginLeft: "5px" }}>{t.currency}</span>
             </div>
             <div className={`quick-amounts ${getLanguageClass()}`}>
               <p className={getLanguageClass()}>{t.quickAmounts}</p>

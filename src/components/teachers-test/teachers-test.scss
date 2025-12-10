@@ -1,7 +1,8 @@
 .t-tests {
-  ul{
+  ul {
     list-style-type: disc !important;
   }
+
   max-width: 1366px;
   border-radius: 10px;
   padding: 20px;
@@ -82,11 +83,15 @@
                 align-items: center;
                 justify-content: center;
                 z-index: 2;
-                .main-d{
+
+                .main-d {
                   width: 100%;
+                  .left-d{
+                    
+                  }
                   .icon-wrapper {
                     margin-right: 10px;
-                    width: 70px;
+                    width: 70px !important;
                     height: 70px;
                     border-radius: 50% !important;
                     background-color: #179f5d;
@@ -95,23 +100,22 @@
                     align-items: center;
                     justify-content: center;
                     margin-bottom: 10px;
-  
                     i {
                       font-size: 36px;
                       color: #fff;
                     }
                   }
-  
+                  
                   h4 {
+                    color: rgba(0,0,0,0.7);
                     width: 100%;
-                    height: 30%;
                     font-size: 18px;
                     font-weight: 600;
                     margin-bottom: 8px;
                     text-align: left;
                   }
-  
-                  
+
+
                   .category {
                     font-size: 12px;
                     background-color: rgba(0, 0, 0, 0.096);
@@ -120,11 +124,12 @@
                     text-transform: uppercase;
                   }
                 }
+
                 .btn-card {
                   margin-top: 15px;
                   width: 100%;
                   display: flex;
-                  justify-content:center;
+                  justify-content: center;
 
                   a button {
                     background-color: #179f5d;
@@ -142,17 +147,37 @@
                     }
                   }
                 }
+
                 .subject-desc {
-                  font-size: 14px;
-                  text-align: left;
-                  padding: 10px;
-                  width: 90%;
-                  border-radius: 10px;
-                  font-weight: 600;
-                  margin-bottom: 8px;
-                  background-color: rgba(0, 0, 0, 0.089);
-                  font-size: 12px;
+                  width: 100%;
+                  padding: 12px 14px;
+                  margin-top: 12px;
+                  background: rgba(0, 0, 0, 0.06);
+                  border-radius: 12px;
+                  font-size: 13px;
+                  font-weight: 500;
+                  list-style: none;
+
+                  li {
+                    margin-bottom: 6px;
+                    display: flex;
+                    align-items: center;
+                    line-height: 1.35;
+                    color: #333;
+
+                    span {
+                      font-size: 18px;
+                      font-weight: bold;
+                      margin-right: 6px;
+                      display: inline-block;
+                    }
+                  }
+
+                  li:last-child {
+                    margin-bottom: 0;
+                  }
                 }
+
               }
             }
 
@@ -212,10 +237,8 @@
               .main-d {
                 width: 60%;
                 justify-content: center;
-                .left-d{
-                  width: 40%;
-                }
               }
+
               &.animated-subject {
                 transform: scale(0.9);
                 position: relative;
@@ -238,12 +261,15 @@
 @media screen and (max-width: 410px) {
   .t-tests {
     border-radius: 0;
+
     .t-tests-inner {
       padding: 0;
+
       .tbrow {
         .cell {
           .subjects-list {
             padding: 0;
+
             &.sl-2 {
               justify-content: space-between;
 
@@ -251,9 +277,11 @@
                 padding: 0;
               }
             }
+
             &>li {
               width: 90% !important;
-              h4{
+
+              h4 {
                 font-size: 16px !important;
               }
 
