@@ -4,7 +4,6 @@ import {
   Routes,
   Route,
   useLocation,
-  Navigate,
 } from "react-router-dom";
 import { useEffect, useState } from "react";
 import Home from "./pages/Home/home";
@@ -38,7 +37,6 @@ import ToifaDetail from "./pages/toifa-testing/toifa";
 import ToifaBySubject from "./pages/toifa-by-subject/toifaBySubject";
 import Contact from "./pages/contact2/contact";
 import PasswordRecovery from "./pages/passwordRecovery/passRecovery";
-import ComplatedTestDetails from "./pages/complatedTestsDetail/complatedTestsDetail";
 import VideoCourse from "./pages/video-courses/video-course";
 import VideoCourseDetail from "./pages/video-course-detail/video-course-detail";
 import AlertPopup from "./components/alertPopup/alertPopup";

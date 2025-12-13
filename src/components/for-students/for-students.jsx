@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from "react";
+import { useEffect, useState, useContext } from "react";
 import { Link } from "react-router-dom";
 import { AccessContext } from "../../AccessContext";
 
@@ -137,9 +137,6 @@ const translations = {
             <div className={`container-item-links ${getLanguageClass()}`}>
               {access ? (
                 <>
-                  {/* <a href="#data-section" className={getLanguageClass()}>
-                    <span className={getLanguageClass()}>{t.buttonDetails}</span>
-                  </a> */}
                   <a href="#subject-tests" className={getLanguageClass()}>
                     <span className={getLanguageClass()}>{t.buttonStart}</span>
                   </a>

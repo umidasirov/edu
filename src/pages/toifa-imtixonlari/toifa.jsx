@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import {  useNavigate, useParams } from 'react-router-dom';
 import { AccessContext } from '../../AccessContext';
 import { api } from '../../App';
 import Loading from '../../components/loading/loading';
