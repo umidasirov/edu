@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import "./teachers-test.scss";
 import { Link } from 'react-router-dom';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBook, faGlobe, faFlask, faLeaf, faAtom, faLaptopCode, faLanguage, faSquareRootAlt, faPenNib } from '@fortawesome/free-solid-svg-icons';
 const TeachersTest = () => {
     const language = localStorage.getItem("language") || "uz";
     const [animatedSubjects, setAnimatedSubjects] = useState([]);
@@ -187,14 +185,6 @@ const TeachersTest = () => {
 
     return (
         <div className={`t-tests ${languageClass}`}>
-            <h1 className={languageClass}>{t.title}</h1>
-
-            <p className={languageClass}>
-                {t.description}
-                <Link to="/toifa-imtihonlari" className={languageClass}>
-                    {t.viewAll}
-                </Link>
-            </p>
 
             <div className="t-tests-inner">
                 <div className="tbrow">
@@ -242,6 +232,11 @@ const TeachersTest = () => {
                                 </li>
                             ))}
                         </ul>
+                            <p>
+                            <Link to="/toifa-imtihonlari" className={languageClass}>
+                                {t.viewAll}
+                            </Link>
+                            </p>
 
                     </div>
                 </div>

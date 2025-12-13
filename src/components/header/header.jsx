@@ -17,7 +17,7 @@ const Header = () => {
     uz: {
       navItems: [
         { name: "Bosh sahifa", link: "/" },
-        { name: "Testlar", link: "/schools/prezident-maktablari" },
+        { name: "Testlar", link: "/toifa-imtihonlari" },
         // { name: "Video kurslar", link: "/video-courses/" },
         { name: "Bog'lanish", link: "contact" },
       ],
@@ -32,7 +32,7 @@ const Header = () => {
     kaa: {
       navItems: [
         { name: "Бас бет", link: "/" },
-        { name: "Тестлер", link: "/schools/prezident-maktablari" },
+        { name: "Тестлер", link: "/toifa-imtihonlari" },
         // { name: "Пәнлер", link: "sciences/matematika" },
         { name: "Байланыс", link: "contact" }, // Qoraqalpoqcha - to'g'ri tarjima
       ],
@@ -47,7 +47,7 @@ const Header = () => {
     ru: {
       navItems: [
         { name: "Главная", link: "/" },
-        { name: "Тесты", link: "/schools/prezident-maktablari" },
+        { name: "Тесты", link: "/toifa-imtihonlari" },
         // { name: "Предметы", link: "sciences/matematika" },
         { name: "Контакты", link: "contact" }, // Ruscha - to'g'ri tarjima
       ],
@@ -62,7 +62,7 @@ const Header = () => {
     en: {
       navItems: [
         { name: "Home", link: "/" },
-        { name: "Tests", link: "/schools/prezident-maktablari" },
+        { name: "Tests", link: "/toifa-imtihonlari" },
         // { name: "Subjects", link: "sciences/matematika" },
         { name: "Contact", link: "sciences/matematika" },
       ],

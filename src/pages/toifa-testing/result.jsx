@@ -168,7 +168,7 @@ const Results = ({ results, test, selectedAnswers, loading }) => {
   const renderQuestionText = (text) => {
     if (typeof text !== "string") return "";
 
-    const baseUrl = "https://edumark.uz";
+    const baseUrl = "https://edumark.adxamov.uz";
     text = text.replace(
       /<img\s+src=["'](\/media[^"']+)["']/g,
       (match, path) => `<img src="${baseUrl}${path}" />`

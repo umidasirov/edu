@@ -109,7 +109,7 @@ const Question = ({
 
   const fixImageUrl = (text) => {
     if (typeof text !== "string") return "";
-    const baseUrl = "https://edumark.uz";
+    const baseUrl = "https://edumark.adxamov.uz";
     return text.replace(
       /<img\s+([^>]*?)src=["'](\/media[^"']+)["']([^>]*)>/g,
       (match, before, path, after) => {

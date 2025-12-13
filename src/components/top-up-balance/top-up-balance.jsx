@@ -130,7 +130,7 @@ const BalanceTopUp = ({ user }) => {
       const paymentAPI =
         paymentMethod === "payme"
           ? `${api}/order/create/`
-          : "https://api.edumark.uz/pyclick/process/click/transaction/create/";
+          : "https://edu-api.adxamov.uz/pyclick/process/click/transaction/create/";
 
       const requestBody =
         paymentMethod === "payme"

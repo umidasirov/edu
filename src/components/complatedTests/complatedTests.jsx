@@ -13,7 +13,7 @@ const ComplatedTests = ({ id }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(`https://api.edumark.uz/api/user-statistics/?user_id=${id}`);
+        const response = await fetch(`https://edu-api.adxamov.uz/api/user-statistics/?user_id=${id}`);
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }

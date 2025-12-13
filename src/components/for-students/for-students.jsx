@@ -26,7 +26,7 @@ const translations = {
   uz: {
     heading: "O‘qituvchilar uchun eng sifatli, amaliy va real attestatsiya imtihonlariga mos testlar",
     description:
-      "Barcha o‘qituvchilar uchun mos. Malaka (toifa) attestatsiyasi, qayta tayyorlov va baholash jarayonlari uchun kerakli testlar — barchasi bir platformada.",
+      "Barcha fan o‘qituvchilari uchun malaka (toifa) attestatsiyasiga tayyorlov va o'z bilimlarini baholash jarayonlari uchun kerakli testlar — barchasi bir platformada.",
     buttonDetails: "Batafsil",
     buttonStart: "Testni boshlash",
     login: "Kirish",
@@ -60,7 +60,7 @@ const translations = {
     heading:
       "Качественные, практичные и соответствующие реальным аттестационным экзаменам тесты",
     description:
-      "Подходит для всех учителей. Тесты для прохождения квалификационной аттестации, повышения категории и повторной подготовки — всё на одной платформе.",
+      "Подходит для всех учителейНеобходимые тесты для подготовки к аттестации квалификации (категории) для всех учителей-предметников и процессы оценки их знаний-все на одной платформе. Тесты для прохождения квалификационной аттестации, повышения категории и повторной подготовки — всё на одной платформе.",
     buttonDetails: "Подробнее",
     buttonStart: "Начать тест",
     login: "Вход",
@@ -76,7 +76,7 @@ const translations = {
   en: {
     heading: "High-quality, practical, and teacher-certification-aligned test collections",
     description:
-      "Designed for all educators. Certification, qualification level exams, and evaluation preparation — all in one platform.",
+      "Necessary tests for the preparation of qualification (category) certificates for all science teachers and their knowledge assessment processes - all on one platform.",
     buttonDetails: "Details",
     buttonStart: "Start Test",
     login: "Login",

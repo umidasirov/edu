@@ -43,7 +43,7 @@ import VideoCourse from "./pages/video-courses/video-course";
 import VideoCourseDetail from "./pages/video-course-detail/video-course-detail";
 import AlertPopup from "./components/alertPopup/alertPopup";
 
-export const api = "https://api.edumark.uz/api"
+export const api = "https://edu-api.adxamov.uz/api"
 // export const api = "http://localhost:3001/api";
 
 const useFetchProfile = () => {
