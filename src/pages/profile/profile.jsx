@@ -173,7 +173,7 @@ const Profile = () => {
                   {t.levelUp}
                   <img src={arrow_image} alt="" className={getLanguageClass()} />
                 </div>
-                <Link to="/schools/prezident-maktablari" className={getLanguageClass()}>{t.start}</Link>
+                <Link to="/schools/toifa-imtihonlari" className={getLanguageClass()}>{t.start}</Link>
               </div>
 
               <ComplatedTests id={profileData.id} />
@@ -267,7 +267,7 @@ const Profile = () => {
                   {t.levelUp}
                   <img src={arrow_image} alt="" className={getLanguageClass()} />
                 </div>
-                <Link to="/schools/prezident-maktablari" className={getLanguageClass()}>{t.start}</Link>
+                <Link to="/toifa-imtihonlari" className={getLanguageClass()}>{t.start}</Link>
               </div>
             </div>
           </div>

@@ -184,7 +184,7 @@ const TeachersTest = () => {
     const languageClass = getLanguageClass();
 
     return (
-        <div className={`t-tests ${languageClass}`}>
+        <div className={`t-tests ${languageClass}`} id='subject-tests'>
 
             <div className="t-tests-inner">
                 <div className="tbrow">

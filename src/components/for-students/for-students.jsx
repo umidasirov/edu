@@ -140,7 +140,7 @@ const translations = {
                   {/* <a href="#data-section" className={getLanguageClass()}>
                     <span className={getLanguageClass()}>{t.buttonDetails}</span>
                   </a> */}
-                  <a href="#schools-tests" className={getLanguageClass()}>
+                  <a href="#subject-tests" className={getLanguageClass()}>
                     <span className={getLanguageClass()}>{t.buttonStart}</span>
                   </a>
                 </>
