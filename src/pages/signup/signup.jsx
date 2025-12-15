@@ -56,7 +56,7 @@ const Signup = () => {
   const translations = {
     uz: {
       title: "Ro'yxatdan o'tish - Edu Mark",
-      header: "Prezident Maktablariga Qabul – Yangi Avlod Iqtidorlari Uchun Ilk",
+      header: "O‘qituvchilar Attestatsiyasi – Kasbiy Yuksalish Yo‘lidagi Muhim",
       headerSpan: "Qadam",
       subheader: "Biz bilan birga o'rganing va muvaffaqiyatga erishing.",
       signupTitle: "Ro'yxatdan o'tish",
@@ -104,8 +104,8 @@ const Signup = () => {
     },
     kaa: {
       title: "Тизмеден отўў - Edu Mark",
-      header: "Президент Мектеплерине Қабул – Яңы Авлод Иқтидорлары Үшин Илк",
-      headerSpan: "Қадам",
+      header: "Oqıtıwshılar attestaciyası – Kásiplik rawajlanıw jolındaǵı máńizli",
+      headerSpan: "Qadam",
       subheader: "Биз менен бирге ўргениңиз ҳәм муваффақиятқа еришиңиз.",
       signupTitle: "Тизмеден отўў",
       phonePlaceholder: "Телефон номери",
@@ -152,8 +152,8 @@ const Signup = () => {
     },
     ru: {
       title: "Регистрация - Edu Mark",
-      header: "Поступление в Президентские школы – Первый",
-      headerSpan: "Шаг",
+      header: "Аттестация – Важный шаг на пути профессионального роста",
+      headerSpan: "учителей",
       subheader: "Учитесь и достигайте успеха вместе с нами.",
       signupTitle: "Регистрация",
       phonePlaceholder: "Номер телефона",
@@ -200,7 +200,7 @@ const Signup = () => {
     },
     en: {
       title: "Sign Up - Edu Mark",
-      header: "Admission to Presidential Schools - First",
+      header: "Teacher Certification – An Important Step Toward Professional Growth",
       headerSpan: "Step",
       subheader: "Learn and achieve success with us.",
       signupTitle: "Sign Up",
