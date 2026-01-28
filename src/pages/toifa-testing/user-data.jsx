@@ -11,7 +11,7 @@ const UserData = () => {
             <img src={profileData?.image || user} alt="" />
         </div>
         <div className="u-right">
-            <div className="name">{profileData?.name} {profileData?.surname}</div>
+            <div className="name">{profileData?.first_name} {profileData?.last_name}</div>
         </div>
     </div>
   )

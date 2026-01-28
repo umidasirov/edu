@@ -243,23 +243,27 @@ const ToifaDetail = () => {
 
     // Fetch test details
     // Testni yuklash
+    const token = localStorage.getItem('accessToken')
     useEffect(() => {
         const fetchTest = async () => {
             try {
-                const response = await fetch(`${api}/tests/${id}/`);
+                const response = await fetch(`${api}/category_exams/test/${id}/start/`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
+
                 if (!response.ok) throw new Error('Testni yuklab bo‘lmadi');
 
                 const testData = await response.json();
+                console.log(testData);
+
                 setTest(testData);
 
-                // Agar timeLeft saqlanmagan bo'lsa, test vaqtini o'rnatamiz
-                if (!timeLeft) {
-                    const totalSeconds = testData.time
-                        .split(':')
-                        .reduce((acc, time) => acc * 60 + Number(time), 0);
-
-                    setTimeLeft(totalSeconds);
-                }
+                // timeLeft serverdan kelgan ma'lumot asosida
+                setTimeLeft(testData.attempt.remaining_seconds);
 
             } catch (err) {
                 setError(err.message);
@@ -267,6 +271,7 @@ const ToifaDetail = () => {
                 setLoading(false);
             }
         };
+
 
         fetchTest();
 

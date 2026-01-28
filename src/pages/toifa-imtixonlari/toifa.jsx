@@ -193,7 +193,10 @@ const Toifa = () => {
       // TEST BOSHLASH
       localStorage.setItem("startTest", selectedTest.guid);
       setStartTest(selectedTest.guid);
-
+      console.log(selectedTest);
+      console.log(data);
+      
+      
       navigate(`/toifa/${name}/fan/${selectedTest.guid}`, { state: { testData: data } });
     } catch (err) {
       // REVERT BALANCE

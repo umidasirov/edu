@@ -3,6 +3,7 @@ import "./toifa.scss";
 import katex from "katex";
 import "katex/dist/katex.min.css";
 import parse from "html-react-parser";
+import { api } from "../../App";
 
 const Question = ({
   question,
@@ -135,7 +136,7 @@ const Question = ({
   };
   const fixImageUrl = (text) => {
     if (typeof text !== "string") return "";
-    const baseUrl = "https://edu-api.adxamov.uz/";
+    const baseUrl = api;
     return text.replace(
       /<img\s+([^>]*?)src=["'](\/media[^"']+)["']([^>]*)>/g,
       (match, before, path, after) => {
@@ -201,7 +202,7 @@ const Question = ({
   const renderQuestionText = (text) => {
     if (typeof text !== "string") return "";
 
-    const baseUrl = "https://edu-api.adxamov.uz/";
+    const baseUrl = api;
 
     // <img> teglarini vaqtincha saqlash uchun joy
     const imgPlaceholders = [];
@@ -463,7 +464,7 @@ const Question = ({
         </div>
         <div className={`options ${getLanguageClass()}`}>
           {question.options.map((option, index) => (
-            <div key={option.id} className={`options-1 ${getLanguageClass()}`}>
+            <div key={index} className={`options-1 ${getLanguageClass()}`}>
               <div className={`option ${getLanguageClass()}`}>
                 <input
                   className={`option ${getLanguageClass()}`}

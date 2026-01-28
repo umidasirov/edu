@@ -8,7 +8,7 @@ import Question from "./question";
 import Results from "./results";
 import Loading from "../../components/loading/loading";
 import { UseTestMode } from "../../components/linksBlock/linksBlock";
-
+import { useLocation } from "react-router-dom";
 const Testing = () => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -19,6 +19,10 @@ const Testing = () => {
   const [results, setResults] = useState(null);
   const { profileData, access } = useContext(AccessContext);
 
+  const location = useLocation();
+  const { testData } = location.state || {};
+  console.log(testData);
+  
   // Test holati uchun state'lar (localStorage ishlatilmaydi)
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedAnswers, setSelectedAnswers] = useState([]);
@@ -101,6 +105,7 @@ const Testing = () => {
   // Test boshlanganda flag'ni o'rnatish va tekshirish
   useEffect(() => {
     const activeTestId = localStorage.getItem("startTest");
+    console.log(activeTestId);
 
     // Agar boshqa test ishlayotgan bo'lsa, bosh sahifaga yo'naltiramiz
     if (activeTestId && activeTestId !== id) {
@@ -120,10 +125,15 @@ const Testing = () => {
   }, [id, results, navigate]);
 
   // Test ma'lumotlarini yuklash
+  const token = localStorage.getItem('authToken')
   useEffect(() => {
     const fetchTestDetails = async () => {
       try {
-        const response = await fetch(`${api}/tests/${id}/`);
+        const response = await fetch(`$/category_exams/test/${testData.id}/start/`,{ method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },});
 
         if (!response.ok) throw new Error(t.fetchError);
         const testsData = await response.json();
