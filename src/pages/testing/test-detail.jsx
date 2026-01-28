@@ -19,7 +19,7 @@ const Testing = () => {
   const [results, setResults] = useState(null);
   const { profileData, access } = useContext(AccessContext);
 
-  // Test holati uchun state'lar (localStorage ishlatilmaydi)
+  // Test holati state'lari
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedAnswers, setSelectedAnswers] = useState([]);
   const [timeLeft, setTimeLeft] = useState(null);
@@ -30,123 +30,133 @@ const Testing = () => {
   const [showExitModal, setShowExitModal] = useState(false);
 
   // Til sozlamalari
-  const translations = {
+const translations = {
     uz: {
-      loading: "Yuklanmoqda...",
-      error: "Xatolik:",
-      fetchError: "Test tafsilotlarini olishda xato yuz berdi.",
-      saveError: "Natijalarni saqlashda xato yuz berdi.",
-      finishError: "Testing natijalarini saqlashda xato yuz berdi.",
-      previous: "Ortga",
-      next: "Keyingi Savol",
-      analyzing: "Taxlil qilinmoqda...",
-      viewResults: "Natijani Ko'rish",
-      minutes: "daqiqa",
-      seconds: "soniya",
-      timeFormat: (min, sec) => `${min} daqiqa ${sec} soniya`,
-      accessDenied: "Kirish rad etildi",
-      exitWarning: "Test davom etayotgan paytda sahifani tark etish natijalaringizni yo'qotishiga olib kelishi mumkin. Rostan ham sahifani tark etmoqchimisiz?",
-      exitConfirm: "Ha, chiqish",
-      exitCancel: "Yo'q, qolish"
+      title: "O'zingizni toifa imtixoni uchun shu yerda sinang!",
+      tableHeaders: ["№", "Fan nomi", "Vaqt", "Boshlash"],
+      startTest: "Testni boshlash",
+      noSubjects: "Toifa fanlari topilmadi.",
+      coursePrice: "Kurs narxi:",
+      currency: "so'm",
+      timeUnit: "minut",
+      insufficientBalance: "Sizda yetarli mablag' mavjud emas!",
+      cancel: "Bekor qilish",
+      topUpBalance: "Balansni oshirish",
+      confirmation: "Haqiqatdan ham kursni boshlamoqchimisiz?",
+      loginPrompt: "Iltimos, tizimga kiring.",
+      networkError: "Tarmoq xatosi yuz berdi",
+      startTestConfirmation: "Testni boshlash",
+      login: "Kirish",
+      searchPlaceholder: "Fan nomi bo'yicha qidirish...", // New translation
+      continueTest: "Davom etish",
+      continueConfirmation: "Test davom ettirilsinmi?",
+      newTest: "Yangi test boshlash"
     },
     kaa: {
-      loading: "Қирьан эйней...",
-      error: "Хата: ",
-      fetchError: "Тест хаалаатка асаан ейлие хатъа хасай.",
-      saveError: "Натиджа хазана асаан ейлие хатъа хасай.",
-      finishError: "Тест натиджа хазана асаан ейлие хатъа хасай.",
-      previous: "Нааз",
-      next: "Балан Саваал",
-      analyzing: "Тахлийилья жаахей...",
-      viewResults: "Натиджа Нааз",
-      minutes: "дақииқа",
-      seconds: "соанийя",
-      timeFormat: (min, sec) => `${min} дақииқа ${sec} соанийя`,
-      accessDenied: "Хайваан наазхай"
+      title: "Өзүңизни тоифа имтиҳаны үщин шу жерде сынаң!",
+      tableHeaders: ["№", "Фан атың", "Уақыты", "Баслаў"],
+      startTest: "Тести баслаў",
+      noSubjects: "Тоифа фанлары табылмады.",
+      coursePrice: "Курс баһасы:",
+      currency: "сўм",
+      timeUnit: "минут",
+      insufficientBalance: "Сизде жетерлик қаражат жоқ!",
+      cancel: "Бекар қылыў",
+      topUpBalance: "Балансты арттырыў",
+      confirmation: "Шынында курсны баслаўды қалап тұрсызба?",
+      loginPrompt: "Илтимас, тизимге кириң.",
+      networkError: "Тармақ қаталығы юз берди",
+      startTestConfirmation: "Тести баслаў",
+      login: "Кириў",
+      searchPlaceholder: "Фан аты бойынша іздеу..." // New translation
     },
     ru: {
-      loading: "Загрузка...",
-      error: "Ошибка:",
-      fetchError: "Произошла ошибка при получении данных теста.",
-      saveError: "Ошибка при сохранении результатов.",
-      finishError: "Ошибка при сохранении результатов тестирования.",
-      previous: "Назад",
-      next: "Следующий вопрос",
-      analyzing: "Анализируется...",
-      viewResults: "Посмотреть результаты",
-      minutes: "минут",
-      seconds: "секунд",
-      timeFormat: (min, sec) => `${min} минут ${sec} секунд`,
-      accessDenied: "Доступ запрещен"
+      title: "Проверьте себя на квалификационный экзамен здесь!",
+      tableHeaders: ["№", "Название предмета", "Время", "Начать"],
+      startTest: "Начать тест",
+      noSubjects: "Предметы не найдены.",
+      coursePrice: "Цена курса:",
+      currency: "сум",
+      timeUnit: "минут",
+      insufficientBalance: "У вас недостаточно средств!",
+      cancel: "Отмена",
+      topUpBalance: "Пополнить баланс",
+      confirmation: "Вы действительно хотите начать курс?",
+      loginPrompt: "Пожалуйста, войдите в систему.",
+      networkError: "Произошла сетевая ошибка",
+      startTestConfirmation: "Начать тест",
+      login: "Войти",
+      searchPlaceholder: "Поиск по названию предмета..." // New translation
     },
     en: {
-      loading: "Loading...",
-      error: "Error:",
-      fetchError: "Error fetching test details.",
-      saveError: "Error saving results.",
-      finishError: "Error saving test results.",
-      previous: "Previous",
-      next: "Next Question",
-      analyzing: "Analyzing...",
-      viewResults: "View Results",
-      minutes: "minutes",
-      seconds: "seconds",
-      timeFormat: (min, sec) => `${min} minutes ${sec} seconds`,
-      accessDenied: "Access denied"
+      title: "Test yourself for the qualification exam here!",
+      tableHeaders: ["№", "Subject name", "Time", "Start"],
+      startTest: "Start test",
+      noSubjects: "No subjects found.",
+      coursePrice: "Course price:",
+      currency: "UZS",
+      timeUnit: "minutes",
+      insufficientBalance: "You don't have enough balance!",
+      cancel: "Cancel",
+      topUpBalance: "Top up balance",
+      confirmation: "Do you really want to start the course?",
+      loginPrompt: "Please log in.",
+      networkError: "Network error occurred",
+      startTestConfirmation: "Start test",
+      login: "Login",
+      searchPlaceholder: "Search by subject name..." // New translation
     }
   };
   const language = localStorage.getItem("language") || "uz";
   const t = translations[language] || translations["uz"];
+  const getLanguageClass = () =>
+    language === "ru" || language === "kaa" ? "ru" : "";
 
-  // Test boshlanganda flag'ni o'rnatish va tekshirish
+  // 🔹 Test boshlanganda flag
   useEffect(() => {
     const activeTestId = localStorage.getItem("startTest");
-
-    // Agar boshqa test ishlayotgan bo'lsa, bosh sahifaga yo'naltiramiz
     if (activeTestId && activeTestId !== id) {
       navigate("/schools/prezident-maktablari");
       return;
     }
-
-    // Yangi testni boshlaymiz
     localStorage.setItem("startTest", id);
 
     return () => {
-      // Agar test tugallanmagan bo'lsa, flag'ni o'chiramiz
-      if (!results) {
-        localStorage.removeItem("startTest");
-      }
+      if (!results) localStorage.removeItem("startTest");
     };
   }, [id, results, navigate]);
 
-  // Test ma'lumotlarini yuklash
+  // 🔹 Test ma'lumotlarini yuklash
   useEffect(() => {
     const fetchTestDetails = async () => {
+      setLoading(true);
       try {
-        const response = await fetch(`${api}/tests/${id}/`);
+        const token = localStorage.getItem("accessToken");
+        if (!token) throw new Error(t.accessDenied);
+
+        const response = await fetch(`${api}/category_exams/test/${id}/start/`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({}),
+        });
 
         if (!response.ok) throw new Error(t.fetchError);
-        const testsData = await response.json();
 
-        if (testsData) {
-          setTest(testsData);
-          const flattenedQuestions = [];
-          for (const science in testsData.questions_grouped_by_science) {
-            flattenedQuestions.push(...testsData.questions_grouped_by_science[science]);
-          }
-          setAllQuestions(flattenedQuestions);
+        const data = await response.json();
+        setTest(data);
+        setAllQuestions(data.questions || []);
 
-          // Vaqtni hisoblash
-          const totalSeconds = testsData.time
-            .split(":")
-            .reduce((acc, time) => acc * 60 + Number(time), 0);
-
-          setTimeLeft(totalSeconds);
-          setStartTime(new Date());
-          setQuestionStartTime(new Date());
-        }
-      } catch (error) {
-        setError(error.message);
+        const totalSeconds = data.time
+          .split(":")
+          .reduce((acc, t) => acc * 60 + Number(t), 0);
+        setTimeLeft(totalSeconds);
+        setStartTime(new Date());
+        setQuestionStartTime(new Date());
+      } catch (err) {
+        setError(err.message);
       } finally {
         setLoading(false);
       }
@@ -155,7 +165,7 @@ const Testing = () => {
     fetchTestDetails();
   }, [id, t.fetchError]);
 
-  // Test tugaganda natijalarni hisoblash
+  // 🔹 Natijalarni hisoblash
   const calculateResults = async () => {
     if (!test) return;
     setResLoading(true);
@@ -170,7 +180,10 @@ const Testing = () => {
     const totalMinutes = String(Math.floor(totalTimeTaken / 60)).padStart(2, "0");
     const totalSeconds = String(totalTimeTaken % 60).padStart(2, "0");
 
-    const formattedTime = t.timeFormat(Math.floor(totalTimeTaken / 60), totalTimeTaken % 60);
+    const formattedTime = t.timeFormat(
+      Math.floor(totalTimeTaken / 60),
+      totalTimeTaken % 60
+    );
 
     const answersData = selectedAnswers.map((answer) => ({
       question_id: answer.questionId,
@@ -184,65 +197,53 @@ const Testing = () => {
       incorrect_answers: totalQuestions - correctAnswersCount,
       unanswered_questions: totalQuestions - selectedAnswers.length,
       total_questions: totalQuestions,
-      percentage_correct: ((correctAnswersCount / totalQuestions) * 100).toFixed(2),
+      percentage_correct: ((correctAnswersCount / totalQuestions) * 100).toFixed(
+        2
+      ),
       total_time_taken: `00:${totalMinutes}:${totalSeconds}`,
       time_per_question: timePerQuestion,
       time_taken: formattedTime,
     };
 
     try {
-      // Statistikani yuborish
-      const response = await fetch(`${api}/statistics/`, {
+      await fetch(`${api}/statistics/`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(resultData),
       });
 
-      if (!response.ok) throw new Error(t.saveError);
-
       const finishResponse = await fetch(`${api}/finish/${test.id}/`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ answers: answersData }),
       });
 
       if (!finishResponse.ok) throw new Error(t.finishError);
 
       const finishData = await finishResponse.json();
-
       setResults({ ...resultData, total_score: finishData.total_score, ai: finishData });
       localStorage.removeItem("startTest");
-
-    } catch (error) {
-      console.error(error.message);
+    } catch (err) {
+      console.error(err.message);
     } finally {
       setResLoading(false);
     }
   };
 
-  // Vaqt tugaganda natijalarni hisoblash
+  // 🔹 Timer
   useEffect(() => {
-    if (timeLeft === 0) {
-      calculateResults();
-    }
+    if (timeLeft === 0) calculateResults();
   }, [timeLeft]);
 
-  // Vaqtni hisoblash
   useEffect(() => {
     if (!timeLeft || results) return;
-
     const timer = setInterval(() => {
       setTimeLeft((prev) => (prev > 0 ? prev - 1 : 0));
     }, 1000);
-
     return () => clearInterval(timer);
   }, [timeLeft, results]);
 
-  // Browser orqali chiqishni bloklash
+  // 🔹 Browser chiqish blok
   useEffect(() => {
     const handleBeforeUnload = (e) => {
       if (!results) {
@@ -251,12 +252,11 @@ const Testing = () => {
         return t.exitWarning;
       }
     };
-
     window.addEventListener("beforeunload", handleBeforeUnload);
     return () => window.removeEventListener("beforeunload", handleBeforeUnload);
   }, [results, t.exitWarning]);
 
-  // Savollarni boshqarish funksiyalari
+  // 🔹 Savollarni boshqarish
   const handleNextQuestion = () => {
     const currentTime = new Date();
     const timeSpent = Math.floor((currentTime - questionStartTime) / 1000);
@@ -264,7 +264,7 @@ const Testing = () => {
 
     setTimePerQuestion((prev) => ({
       ...prev,
-      [currentQuestion.text]: timeSpent
+      [currentQuestion.text]: timeSpent,
     }));
 
     if (currentQuestionIndex < allQuestions.length - 1) {
@@ -274,40 +274,20 @@ const Testing = () => {
   };
 
   const handlePreviousQuestion = () => {
-    if (currentQuestionIndex > 0) {
+    if (currentQuestionIndex > 0)
       setCurrentQuestionIndex(currentQuestionIndex - 1);
-    }
   };
 
-  // Chiqish modali
   const handleExitConfirm = () => {
     localStorage.removeItem("startTest");
     navigate("/schools/prezident-maktablari");
   };
 
-  const handleExitCancel = () => {
-    setShowExitModal(false);
-  };
+  const handleExitCancel = () => setShowExitModal(false);
 
-  // Til klassini aniqlash
-  const getLanguageClass = () => {
-    return language === "ru" || language === "kaa" ? "ru" : "";
-  };
-
-  if (loading) {
-    return (
-      <p className={getLanguageClass()}>
-        <Loading />
-      </p>
-    );
-  }
-
-  if (error) {
-    return <p className={getLanguageClass()}>{t.error} {error}</p>;
-  }
-
-  if (results) {
-    localStorage.removeItem("startTest")
+  if (loading) return <Loading />;
+  if (error) return <p className={getLanguageClass()}>{t.error} {error}</p>;
+  if (results)
     return (
       <Results
         loading={resLoading}
@@ -316,7 +296,6 @@ const Testing = () => {
         selectedAnswers={selectedAnswers}
       />
     );
-  }
 
   return (
     <section id="test-detail" className={getLanguageClass()}>
@@ -360,9 +339,7 @@ const Testing = () => {
       {allQuestions.length > 0 && (
         <div id="flex" className={getLanguageClass()}>
           {currentQuestionIndex > 0 && (
-            <button onClick={handlePreviousQuestion}>
-              {t.previous}
-            </button>
+            <button onClick={handlePreviousQuestion}>{t.previous}</button>
           )}
           {currentQuestionIndex < allQuestions.length - 1 ? (
             <button className="next" onClick={handleNextQuestion}>

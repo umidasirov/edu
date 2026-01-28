@@ -26,6 +26,7 @@ const Login = () => {
       subheader: "Biz bilan birga o'rganing va muvaffaqiyatga erishing.",
       loginTitle: "Kirish",
       usernamePlaceholder: "Foydalanuvchi nomi yoki Email",
+      phonePlaceholder: "Telefon",
       passwordPlaceholder: "Parol",
       loginButton: loading ? "Kirilmoqda..." : "Kirish",
       registerPrompt: "Agar siz ro'yxatdan o'tmagan bo'lsangiz:",
@@ -41,6 +42,7 @@ const Login = () => {
       subheader: "Биз менен бирге ўргениңиз ҳәм муваффақиятқа еришиңиз.",
       loginTitle: "Кириў",
       usernamePlaceholder: "Пайдаланувшы аты",
+      phonePlaceholder: "Телефон",
       passwordPlaceholder: "Пароль",
       loginButton: loading ? "Кирилмокда..." : "Кириў",
       registerPrompt: "Эгер сиз тизмеден отмеген болсанъыз:",
@@ -56,6 +58,7 @@ const Login = () => {
       subheader: "Учитесь и достигайте успеха вместе с нами.",
       loginTitle: "Вход",
       usernamePlaceholder: "Имя пользователя",
+      phonePlaceholder: "Телефон",
       passwordPlaceholder: "Пароль",
       loginButton: loading ? "Вход..." : "Войти",
       registerPrompt: "Если вы не зарегистрированы:",
@@ -71,6 +74,7 @@ const Login = () => {
       subheader: "Learn and achieve success with us.",
       loginTitle: "Login",
       usernamePlaceholder: "Username",
+      phonePlaceholder: "Phone",
       passwordPlaceholder: "Password",
       loginButton: loading ? "Logging in..." : "Login",
       registerPrompt: "If you're not registered:",
@@ -91,14 +95,14 @@ const Login = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     const data = {
-      username: mode === "username" ? username : phone,
+      identifier: mode === "username" ? username : phone,
       password: password,
       last_login: new Date().toISOString(),
     };
     
     setLoading(true);
     try {
-      const response = await fetch(`${api}/login/`, {
+      const response = await fetch(`${api}/users/login/`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -145,14 +149,14 @@ const Login = () => {
                 className={mode === "username" ? "active" : ""}
                 onClick={() => setMode("username")}
               >
-                Foydalanuvchi nomi yoki Email
+                {t.usernamePlaceholder}
               </button>
               <button
                 type="button"
                 className={mode === "phone" ? "active" : ""}
                 onClick={() => setMode("phone")}
               >
-                Telefon
+                {t.phonePlaceholder}
               </button>
             </div>
 

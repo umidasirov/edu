@@ -4,6 +4,7 @@ import "./passRecovery.scss";
 import { api } from "../../App";
 import InputMask from "react-input-mask";
 import { AccessContext } from "../../AccessContext";
+import { reFormatPhone } from "../../utils/phoneFormatter";
 
 const PasswordRecovery = () => {
   const [step, setStep] = useState(1);
@@ -12,7 +13,7 @@ const PasswordRecovery = () => {
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
-    phone: phone,
+    phone: reFormatPhone(phone),
     new_password: "",
     confirmPassword: '',
   });
@@ -267,14 +268,17 @@ const PasswordRecovery = () => {
     event.preventDefault();
     if (!validateForm()) return;
     setLoading(true);
+    console.log(formData);
+    
     try {
-      const response = await fetch(`${api}/reset-password/`, {
+      const response = await fetch(`${api}/users/password/reset/confirm/`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          ...formData
+          phone:formData.phone, 
+          password:formData.new_password
         }),
       });
 
@@ -314,15 +318,16 @@ const PasswordRecovery = () => {
   }, [step, countdown]);
 
   const [smsLimitError, setSmsLimitError] = useState("");
-
+  const reFormPh = reFormatPhone(phone)
   const sendSMS = async () => {
     setLoading(true);
     setSmsLimitError("");
+    
     try {
-      const res = await fetch(`${api}/send-sms-recovery/`, {
+      const res = await fetch(`${api}/users/password/reset/send-otp/`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ phone }),
+        body: JSON.stringify({ phone:reFormPh }),
       });
 
       const data = await res.json();
@@ -345,11 +350,12 @@ const PasswordRecovery = () => {
     if (!canResend) return;
     setLoading(true);
     setSmsLimitError(""); // Xatoliklarni tozalash
+    const phoneFormatted = reFormatPhone(phone)
     try {
-      const res = await fetch(`${api}/send-sms/`, {
+      const res = await fetch(`${api}/users/password/reset/send-otp/`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ phone }),
+        body: JSON.stringify({ phone:phoneFormatted }),
       });
 
       const data = await res.json(); // Javobni JSON formatida olish
@@ -371,12 +377,12 @@ const PasswordRecovery = () => {
   const verifyCode = async () => {
     setLoading(true);
     setSmsErr("");
-
+    const reFormPh = reFormatPhone(phone)
     try {
-      const res = await fetch(`${api}/verify-sms/`, {
+      const res = await fetch(`${api}/users/password/reset/verify-otp/`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ phone, code: code.join("") }),
+        body: JSON.stringify({ phone:reFormPh, code: code.join("") }),
       });
 
       if (res.ok) {

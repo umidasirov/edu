@@ -25,7 +25,6 @@ const AccessProvider = ({ children }) => {
       setSuccessMessage("");
     }, 3000);
   };
-
   // For payed courses
   const [payedCourses, setPayedCourses] = useState(null);
 
@@ -66,7 +65,7 @@ const AccessProvider = ({ children }) => {
     const userProfile = async () => {
       try {
         // const response = await fetch(`${api}/user-profile/`, {
-          const response = await fetch(`${api}/user-profile/`, {
+          const response = await fetch(`${api}/users/profile/`, {
             method: "GET",
             headers: {
               Authorization: `Bearer ${tokenn}`,  
@@ -74,14 +73,15 @@ const AccessProvider = ({ children }) => {
             },
           });
           
+          
           if (!response.ok) {
             const errorText = await response.text();
             throw new Error(`Tarmoq xatosi: ${response.status} - ${errorText}`);
           }
           
           const data = await response.json();
+          console.log(data);
           
-          // Ma'lumot obyekt yoki ro'yxat bo'lsa, setProfileData orqali holatga solamiz
           setProfileData(data);
           
         } catch (error) {

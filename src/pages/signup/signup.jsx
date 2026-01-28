@@ -5,6 +5,7 @@ import { api } from "../../App";
 import InputMask from "react-input-mask";
 import { AccessContext } from "../../AccessContext";
 import Success from "../../components/success-message/success";
+import { reFormatPhone } from "../../utils/phoneFormatter";
 
 const regionsURL =
   "https://raw.githubusercontent.com/MIMAXUZ/uzbekistan-regions-data/master/JSON/regions.json";
@@ -22,16 +23,20 @@ const Signup = () => {
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
-    name: "",
+    first_name: "",
+    last_name: "",
     username: "",
-    phone_number: phone,
-    surname: "",
+    phone: reFormatPhone(phone),
     email: "",
-    password: "",
-    confirmPassword: '',
-    age: "",
+    birth_date: "",
     gender: "male",
+    region: "",
+    district: "",
+    password: "",
+    confirmPassword: ""
   });
+
+
 
   const [usernameError, setUsernameError] = useState('')
 
@@ -259,7 +264,7 @@ const Signup = () => {
   window.document.title = t.title;
 
   useEffect(() => {
-    setFormData((prev) => ({ ...prev, phone_number: phone }));
+    setFormData((prev) => ({ ...prev, phone: phone }));
   }, [phone]);
 
   useEffect(() => {
@@ -306,7 +311,7 @@ const Signup = () => {
   const handleChange = (event) => {
     const { name, value } = event.target;
     let newValue = value;
-    if (name === "age") {
+    if (name === "birth_date") {
       let parts = value.split(".");
       if (parts.length === 3) {
         let day = parseInt(parts[0], 10);
@@ -337,7 +342,7 @@ const Signup = () => {
       [name]: newValue,
     });
   };
-
+  
   const validateDate = (date) => {
     const regex = /^(\d{2})\.(\d{2})\.(\d{4})$/;
     const match = date.match(regex);
@@ -355,13 +360,13 @@ const Signup = () => {
 
   const validateForm = () => {
     let errors = {};
-    if (!formData.name.trim()) errors.name = t.nameError;
-    if (!formData.surname.trim()) errors.surname = t.surnameError;
+    if (!formData.first_name.trim()) errors.name = t.nameError;
+    if (!formData.last_name.trim()) errors.surname = t.surnameError;
     if (!formData.username.trim()) errors.username = t.usernameError;
-    if (!formData.age.trim() || formData.age.includes("_")) {
-      errors.age = t.ageError;
+    if (!formData.birth_date.trim() || formData.birth_date.includes("_")) {
+      errors.birth_date = t.ageError;
     } else {
-      let ageError = validateDate(formData.age);
+      let ageError = validateDate(formData.birth_date);
       if (ageError) errors.age = ageError;
     }
     if (formData.password.length < 6) {
@@ -374,7 +379,6 @@ const Signup = () => {
     }
     if (!selectedRegion) errors.region = t.regionError;
     if (!selectedDistrict) errors.district = t.districtError;
-    if (formData.password.length < 6) errors.password = t.passwordError;
     if (!offShowInp) errors.inpErr = "Offerta shartlariga rozilik bildirish shart!";
     setErrors(errors);
     return Object.keys(errors).length === 0;
@@ -387,18 +391,36 @@ const Signup = () => {
     try {
       const selectedRegionName = regions.find(region => region.id === Number(selectedRegion));
       const regionName = selectedRegionName ? (language === "ru" ? selectedRegionName.name_ru : selectedRegionName.name_uz.replace(/�/g, "'")) : "";
-      const response = await fetch(`${api}/signup/`, {
+
+      // Phone raqamini tozalash: +998 (95) 702-10-99 -> 998957021012
+      const cleanPhone = phone.replace(/\D/g, "");
+
+      // Birth date formatini konvertqilish: DD.MM.YYYY -> YYYY-MM-DD
+      const [day, month, year] = formData.birth_date.split(".");
+      const formattedBirthDate = `${year}-${month}-${day}`;
+
+      // confirmPassword, region, district ni o'chirip POST ga jo'natamiz
+      const { confirmPassword, region, district, birth_date, ...dataToSend } = formData;
+
+      const response = await fetch(`${api}/users/signup/register/`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          ...formData,
-          province: regionName,
+          ...dataToSend,
+          phone: cleanPhone,
+          birth_date: formattedBirthDate,
+          region: regionName,
           district: selectedDistrict,
         }),
       });
-
+      console.log({...dataToSend,
+          phone: cleanPhone,
+          birth_date: formattedBirthDate,
+          region: regionName,
+          district: selectedDistrict,});
+      
       if (response.ok) {
         const data = await response.json();
         navigate("/login");
@@ -416,6 +438,8 @@ const Signup = () => {
       }
     } catch (error) {
       alert(t.networkError);
+      console.log(error);
+
     } finally {
       setLoading(false);
     }
@@ -444,10 +468,11 @@ const Signup = () => {
     setLoading(true);
     setSmsLimitError(""); // Xatoliklarni tozalash
     try {
-      const res = await fetch(`${api}/send-sms/`, {
+      const cleanedPhone = reFormatPhone(phone);
+      const res = await fetch(`${api}/users/signup/send-otp/`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ phone }),
+        body: JSON.stringify({ phone: cleanedPhone }),
       });
 
       const data = await res.json(); // Javobni JSON formatida olish
@@ -472,10 +497,11 @@ const Signup = () => {
     setLoading(true);
     setSmsLimitError(""); // Xatoliklarni tozalash
     try {
-      const res = await fetch(`${api}/send-sms/`, {
+      const cleanedPhone = reFormatPhone(phone);
+      const res = await fetch(`${api}/users/signup/send-otp/`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ phone }),
+        body: JSON.stringify({ phone: cleanedPhone }),
       });
 
       const data = await res.json(); // Javobni JSON formatida olish
@@ -499,12 +525,14 @@ const Signup = () => {
     setSmsErr("");
 
     try {
-      const res = await fetch(`${api}/verify-sms/`, {
+      const cleanedPhone = reFormatPhone(phone);
+      const res = await fetch(`${api}/users/signup/verify-otp/`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ phone, code: code.join("") }),
+        body: JSON.stringify({ phone: cleanedPhone, code: code.join("") }),
       });
-
+      console.log(JSON.stringify({ phone: cleanedPhone, code: code.join("") }));
+      
       if (res.ok) {
         setStep(3);
       } else {
@@ -709,8 +737,8 @@ const Signup = () => {
                 <input
                   type="text"
                   placeholder={t.namePlaceholder}
-                  name="name"
-                  value={formData.name}
+                  name="first_name"
+                  value={formData.first_name}
                   onChange={handleChange}
                   className={getLanguageClass()}
                 />
@@ -720,8 +748,8 @@ const Signup = () => {
                 <input
                   type="text"
                   placeholder={t.surnamePlaceholder}
-                  name="surname"
-                  value={formData.surname}
+                  name="last_name"
+                  value={formData.last_name}
                   onChange={handleChange}
                   className={getLanguageClass()}
                 />
@@ -742,8 +770,8 @@ const Signup = () => {
                 <InputMask
                   mask="99.99.9999"
                   placeholder={t.agePlaceholder}
-                  name="age"
-                  value={formData.age}
+                  name="birth_date"
+                  value={formData.birth_date}
                   onChange={handleChange}
                   className={getLanguageClass()}
                 >

@@ -14,7 +14,8 @@ import Rating from "../../components/rating/rating";
 import { api } from "../../App";
 import Loading from "../../components/loading/loading";
 import ComplatedTests from "../../components/complatedTests/complatedTests";
-
+import { formatPhoneToUzbekFormat } from "../../utils/phoneFormatter";
+import UserData from "../toifa-testing/user-data";
 const Profile = () => {
   const {
     access,
@@ -30,6 +31,8 @@ const Profile = () => {
   const navigate = useNavigate();
   const [mod, setMod] = useState(false);
   const language = localStorage.getItem("language") || "uz";
+
+  const phone = formatPhoneToUzbekFormat(profileData.phone)
 
   const translations = {
     uz: {
@@ -199,9 +202,9 @@ const Profile = () => {
                     )}
                     <div className={`texts ${getLanguageClass()}`}>
                       <h1 className={`first-last-name ${getLanguageClass()}`}>
-                        {profileData.name || "Yuklanmoqda..."} {profileData.surname}
+                        {profileData.last_name || "Yuklanmoqda..."} {profileData.first_name}
                       </h1>
-                      <p className={`phone ${getLanguageClass()}`}>{profileData.phone_number || "Yuklanmoqda..."}</p>
+                      <p className={`phone ${getLanguageClass()}`}>{phone || "Yuklanmoqda..."}</p>
                       <p className={`username ${getLanguageClass()}`}>{profileData.username}</p>
                     </div>
                   </div>

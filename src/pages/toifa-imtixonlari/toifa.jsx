@@ -1,28 +1,24 @@
-import React, { useContext, useEffect, useState } from 'react';
-import {  useNavigate, useParams } from 'react-router-dom';
-import { AccessContext } from '../../AccessContext';
-import { api } from '../../App';
-import Loading from '../../components/loading/loading';
-import Success from '../../components/success-message/success';
+import React, { useContext, useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { AccessContext } from "../../AccessContext";
+import { api } from "../../App";
+import Loading from "../../components/loading/loading";
+import Success from "../../components/success-message/success";
 import "./toifa.scss";
 
 const Toifa = () => {
   const [loading, setLoading] = useState(true);
-  const [schools, setSchools] = useState([]);
   const [tests, setTests] = useState([]);
-  const [errors, setError] = useState(null);
-  const { name } = useParams();
-  const [mod, setMod] = useState(false);
-  const navigate = useNavigate();
-  const { access, startTest, setStartTest, profileData, setProfileData } =
-    useContext(AccessContext);
-  const [selectedTestId, setSelectedTestId] = useState(null);
-  const [selectedTestPrice, setSelectedTestPrice] = useState(null);
-  const [selectedFanName, setSelectedFanName] = useState(null);
+  const [error, setError] = useState(null);
   const [success, setSuccess] = useState(false);
-  const [isFreeTestAvailable, setIsFreeTestAvailable] = useState(false);
+  const [selectedTest, setSelectedTest] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
-  const language = localStorage.getItem("language") || "uz";
+  const [mod, setMod] = useState(false);
+  const [isFreeTestAvailable, setIsFreeTestAvailable] = useState(false);
+
+  const navigate = useNavigate();
+  const { name } = useParams();
+  const { access, profileData, setProfileData, setStartTest } = useContext(AccessContext);
 
   const translations = {
     uz: {
@@ -32,6 +28,7 @@ const Toifa = () => {
       noSubjects: "Toifa fanlari topilmadi.",
       coursePrice: "Kurs narxi:",
       currency: "so'm",
+      timeUnit: "minut",
       insufficientBalance: "Sizda yetarli mablag' mavjud emas!",
       cancel: "Bekor qilish",
       topUpBalance: "Balansni oshirish",
@@ -52,6 +49,7 @@ const Toifa = () => {
       noSubjects: "Тоифа фанлары табылмады.",
       coursePrice: "Курс баһасы:",
       currency: "сўм",
+      timeUnit: "минут",
       insufficientBalance: "Сизде жетерлик қаражат жоқ!",
       cancel: "Бекар қылыў",
       topUpBalance: "Балансты арттырыў",
@@ -69,6 +67,7 @@ const Toifa = () => {
       noSubjects: "Предметы не найдены.",
       coursePrice: "Цена курса:",
       currency: "сум",
+      timeUnit: "минут",
       insufficientBalance: "У вас недостаточно средств!",
       cancel: "Отмена",
       topUpBalance: "Пополнить баланс",
@@ -86,6 +85,7 @@ const Toifa = () => {
       noSubjects: "No subjects found.",
       coursePrice: "Course price:",
       currency: "UZS",
+      timeUnit: "minutes",
       insufficientBalance: "You don't have enough balance!",
       cancel: "Cancel",
       topUpBalance: "Top up balance",
@@ -98,194 +98,123 @@ const Toifa = () => {
     }
   };
 
+  const language = localStorage.getItem("language") || "uz";
   const t = translations[language] || translations["uz"];
+  const getLanguageClass = () => (language === "ru" ? "ru" : "");
 
-  const getLanguageClass = () => {
-    return language === "ru" || language === "kaa" ? "ru" : "";
-  };
-
+  // 🔹 TESTLARNI OLISH
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchTests = async () => {
       setLoading(true);
       try {
-        const [sciencesResponse, testsResponse] = await Promise.all([
-          fetch(`${api}/category/`),
-          fetch(`${api}/tests_title/`),
-        ]);
+        const res = await fetch(`${api}/category_exams/tests/`);
+        if (!res.ok) throw new Error(t.networkError);
 
-        if (!sciencesResponse.ok || !testsResponse.ok) {
-          throw new Error("Network error");
-        }
-
-        const sciencesData = await sciencesResponse.json();
-        const testsData = await testsResponse.json();
-
-        setSchools(sciencesData);
-        setTests(testsData.tests);
-      } catch (error) {
-        setError(error.message);
+        const data = await res.json();
+        setTests(data);
+      } catch (err) {
+        setError(err.message);
+        setSuccess(true);
       } finally {
         setLoading(false);
       }
     };
-
-    fetchData();
+    fetchTests();
   }, []);
 
-  const formatLink = (text) => {
-    return text.replace(/'/g, "").replace(/\s+/g, "-").toLowerCase();
-  };
-
-  const matchedSchool = schools.find(
-    (school) => formatLink(school.title) === name
+  const filteredTests = tests.filter((test) =>
+    test.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const filteredTests = tests.filter((test) => {
-    const matchesCategory = test.category === matchedSchool?.id;
-    const matchesSearch = test.title.toLowerCase().includes(searchTerm.toLowerCase());
-    return matchesCategory && (searchTerm === "" || matchesSearch);
-  });
+  // 🔹 START BUTTON
+  const onStartClick = async (test) => {
+    if (!access) {
+      navigate("/login");
+      return;
+    }
 
-  const handleStartButtonClick = async (testId, testPrice, fanName) => {
-    setLoading(true);
+    setSelectedTest(test);
+    setMod(true);
+
+    // 🔹 CHECK FREE TEST
+    const token = localStorage.getItem("accessToken");
+    if (!token) return;
+
     try {
-      const token = localStorage.getItem("accessToken");
-
-      if (!access || !token) {
-        setSelectedTestId(testId);
-        setSelectedTestPrice(testPrice);
-        setSelectedFanName(fanName);
-        setMod(true);
-        return;
-      }
-
-      // Check if test is available for free
-      const response = await fetch(`${api}/check_free_test/`, {
+      const res = await fetch(`${api}/check_free_test/`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({ test_id: testId }),
+        body: JSON.stringify({ test_id: test.guid }),
       });
 
-      if (response.ok) {
-        const data = await response.json();
+      if (res.ok) {
+        const data = await res.json();
         setIsFreeTestAvailable(data.is_free);
       } else {
         setIsFreeTestAvailable(false);
       }
-
-      setSelectedTestId(testId);
-      setSelectedTestPrice(testPrice);
-      setSelectedFanName(fanName);
-      setMod(true);
-    } catch (error) {
-      console.error("Error checking free test:", error);
+    } catch {
       setIsFreeTestAvailable(false);
-    } finally {
-      setLoading(false);
     }
   };
 
-  const handleConfirmStartTest = async () => {
+  // 🔹 CONFIRM START
+  const confirmStart = async () => {
     try {
       const token = localStorage.getItem("accessToken");
-      if (!token) {
-        window.location.href = "/login";
+      if (!token) return navigate("/login");
+
+      // BALANCE CHECK
+      if (!isFreeTestAvailable && +profileData.balance < +selectedTest.price) {
+        setError(t.insufficientBalance);
+        setSuccess(true);
         return;
       }
 
-      // Optimistic update - deduct balance immediately if not free
+      // OPTIMISTIC UPDATE
       if (!isFreeTestAvailable) {
-        const oldBalance = profileData.balance;
-        setProfileData(prev => ({
-          ...prev,
-          balance: prev.balance - selectedTestPrice
-        }));
+        setProfileData(prev => ({ ...prev, balance: prev.balance - selectedTest.price }));
       }
 
-      const response = await fetch(`${api}/start-test/`, {
+      const res = await fetch(`${api}/category_exams/test/${selectedTest.guid}/start/`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({
-          test_id: selectedTestId,
-          use_free: isFreeTestAvailable,
-        }),
       });
 
-      if (!response.ok) {
-        // Revert balance deduction if error occurred and not free
-        if (!isFreeTestAvailable) {
-          setProfileData(prev => ({
-            ...prev,
-            balance: prev.balance + selectedTestPrice
-          }));
-        }
+      if (!res.ok) throw new Error(t.networkError);
+      const data = await res.json();
 
-        const errorData = await response.json();
-        setError(errorData.detail || t.networkError);
-        setSuccess(true);
-        setTimeout(() => setSuccess(false), 5000);
-        return;
-      }
+      // TEST BOSHLASH
+      localStorage.setItem("startTest", selectedTest.guid);
+      setStartTest(selectedTest.guid);
 
-      // Success - start the test
-      localStorage.setItem("startTest", selectedTestId);
-      setStartTest(selectedTestId);
-      navigate(`/toifa/${formatLink(selectedFanName)}/fan/${selectedTestId}`);
-
-    } catch (error) {
-      // Revert balance deduction if error occurred and not free
+      navigate(`/toifa/${name}/fan/${selectedTest.guid}`, { state: { testData: data } });
+    } catch (err) {
+      // REVERT BALANCE
       if (!isFreeTestAvailable) {
-        setProfileData(prev => ({
-          ...prev,
-          balance: prev.balance + selectedTestPrice
-        }));
+        setProfileData(prev => ({ ...prev, balance: prev.balance + selectedTest.price }));
       }
-      setError(t.networkError);
+      setError(err.message);
       setSuccess(true);
-      setTimeout(() => setSuccess(false), 5000);
     } finally {
       setMod(false);
       setIsFreeTestAvailable(false);
     }
   };
 
-  const renderStartButton = (test) => {
-    const isCurrentTest = localStorage.getItem("startTest") === test.id?.toString();
-
-    return (
-      <button
-        type="button"
-        onClick={() => handleStartButtonClick(test.id, test.price, test.title)}
-        className={`${getLanguageClass()} ${isCurrentTest ? 'continue-btn' : ''}`}
-        disabled={loading}
-      >
-        {loading && selectedTestId === test.id ? (
-          <span className="loader-small"></span>
-        ) : isCurrentTest ? (
-          t.continueTest
-        ) : (
-          t.startTest
-        )}
-      </button>
-    );
-  };
-
-  if (loading) {
-    return <Loading />;
-  }
+  if (loading) return <Loading />;
 
   return (
     <div className={`toifa ${getLanguageClass()}`}>
-      {success && <Success text={errors} />}
+      {success && <Success text={error} />}
       <h1 className={getLanguageClass()}>{t.title}</h1>
 
-      {/* Search Input */}
       <div className={`search-container ${getLanguageClass()}`}>
         <input
           type="text"
@@ -300,11 +229,8 @@ const Toifa = () => {
         <table className={`${getLanguageClass()} t-table`}>
           <thead className={getLanguageClass()}>
             <tr className={getLanguageClass()}>
-              {t.tableHeaders.map((header, index) => (
-                <th
-                  key={index}
-                  className={`${getLanguageClass()} ${index === 2 ? 'tim' : ''}`}
-                >
+              {t.tableHeaders.map((header, i) => (
+                <th key={i} className={`${getLanguageClass()} ${i === 2 ? "tim" : ""}`}>
                   {header}
                 </th>
               ))}
@@ -312,21 +238,27 @@ const Toifa = () => {
           </thead>
           <tbody className={getLanguageClass()}>
             {filteredTests.length > 0 ? (
-              filteredTests.map((test, testIndex) => (
-                <tr key={test.id} className={getLanguageClass()}>
-                  <td className={getLanguageClass()}>{testIndex + 1}</td>
-                  <td className={getLanguageClass()}>{test.title}</td>
-                  <td className={`${getLanguageClass()} tim`}>{test.time}</td>
-                  <td>{renderStartButton(test)}</td>
+              filteredTests.map((test, i) => (
+                <tr key={test.guid} className={getLanguageClass()}>
+                  <td className={getLanguageClass()}>{i + 1}</td>
+                  <td className={getLanguageClass()}>{test.name}</td>
+                  <td className={`${getLanguageClass()} tim`}>{test.duration} {t.timeUnit}</td>
+                  <td>
+                    <button
+                      onClick={() => onStartClick(test)}
+                      className={getLanguageClass()}
+                    >
+                      {localStorage.getItem("startTest") === test.guid?.toString()
+                        ? t.continueTest
+                        : t.startTest}
+                    </button>
+                  </td>
                 </tr>
               ))
             ) : (
               <tr className={getLanguageClass()}>
                 <td colSpan="4" className={getLanguageClass()}>
-                  {searchTerm ?
-                    `${t.noSubjects} "${searchTerm}"` :
-                    t.noSubjects
-                  }
+                  {t.noSubjects}
                 </td>
               </tr>
             )}
@@ -334,67 +266,31 @@ const Toifa = () => {
         </table>
       </div>
 
-      {/* Modal for test confirmation */}
+      {/* Modal */}
       {mod && <div className={`m-shape ${getLanguageClass()}`}></div>}
       <div className={`opened-modal ${mod ? "active" : ""} ${getLanguageClass()}`}>
-        {/* Narx ko‘rsatish */}
-        {!isFreeTestAvailable && (
-          <p className={getLanguageClass()}>
-            {t.coursePrice} <span>{new Intl.NumberFormat("de-DE").format(selectedTestPrice)} {t.sum}</span>
-          </p>
-        )}
+        {selectedTest && (
+          <>
+            <p className={getLanguageClass()}>
+              {t.coursePrice}{" "}
+              <span>{new Intl.NumberFormat("de-DE").format(selectedTest.price)} {t.currency}</span>
+            </p>
 
-        {/* Agar foydalanuvchi ro'yxatdan o'tmagan bo‘lsa */}
-        {!access ? (
-          <>
-            <p className={getLanguageClass()}>Testni ishlash uchun tizimga kiring!</p>
-            <div className="modal-buttons">
-              <button onClick={() => setMod(false)}>{t.cancel}</button>
-              <button onClick={() => navigate("/login")}>{t.login}</button>
-            </div>
-          </>
-        ) : (
-          <>
-            {/* Bepul imkoniyat mavjud bo‘lsa */}
             {isFreeTestAvailable && (
-              <p className={getLanguageClass()} style={{ color: 'green' }}>
-                {language === 'uz'
-                  ? "Siz bu testni 1 marta bepul yechish imkoniyatiga egasiz!"
-                  : "You can take this test once for free!"}
+              <p style={{ color: "green" }}>
+                {language === "uz" ? "Siz bu testni 1 marta bepul yechish imkoniyatiga egasiz!" : "You can take this test once for free!"}
               </p>
             )}
 
-            {/* Balans yetarli bo'lmasa */}
-            {!isFreeTestAvailable && profileData.balance < selectedTestPrice && (
-              <p style={{ color: "red" }} className={getLanguageClass()}>{t.insufficientBalance}</p>
-            )}
-
-            {/* Faqat balans yetarli bo‘lsa confirmation so‘rovi */}
-            {!isFreeTestAvailable && profileData.balance >= selectedTestPrice && (
-              <p className={getLanguageClass()}>{t.confirmation}</p>
-            )}
+            <p className={getLanguageClass()}>{t.confirmation}</p>
 
             <div className="modal-buttons">
-              <button onClick={() => setMod(false)}>{t.cancel}</button>
-
-              {/* Bepul test bo‘lsa */}
-              {isFreeTestAvailable ? (
-                <button onClick={handleConfirmStartTest}>
-                  {language === "uz" ? "Bepul" : "Free"}
-                </button>
-              ) : (
-                <>
-                  {profileData.balance >= selectedTestPrice ? (
-                    <button onClick={handleConfirmStartTest}>
-                      {t.startTest}
-                    </button>
-                  ) : (
-                    <button onClick={() => navigate("/top-up-balance")}>
-                      {t.topUpBalance}
-                    </button>
-                  )}
-                </>
-              )}
+              <button onClick={() => setMod(false)} className={getLanguageClass()}>
+                {t.cancel}
+              </button>
+              <button onClick={confirmStart} className={getLanguageClass()}>
+                {isFreeTestAvailable ? "Bepul" : t.startTest}
+              </button>
             </div>
           </>
         )}
