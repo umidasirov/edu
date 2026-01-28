@@ -269,7 +269,7 @@ const PasswordRecovery = () => {
     if (!validateForm()) return;
     setLoading(true);
     console.log(formData);
-    
+    const phoneFormat = reFormatPhone(formData.phone)
     try {
       const response = await fetch(`${api}/users/password/reset/confirm/`, {
         method: "POST",
@@ -277,7 +277,7 @@ const PasswordRecovery = () => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          phone:formData.phone, 
+          phone:phoneFormat, 
           password:formData.new_password
         }),
       });
