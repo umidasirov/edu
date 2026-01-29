@@ -300,7 +300,7 @@ const ToifaDetail = () => {
 
         return () => clearInterval(timer);
     }, [timeLeft]);
-
+    
     // Save current state to localStorage
     useEffect(() => {
         localStorage.setItem("currentQuestionIndex", currentQuestionIndex);

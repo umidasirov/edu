@@ -253,9 +253,9 @@ const Question = ({
   };
   const handleOptionSelect = (option) => {
     const updatedAnswers = selectedAnswers.filter(
-      (answer) => answer.questionId !== question.id
+      (answer) => answer.questionGuid !== question.guid
     );
-    updatedAnswers.push({ questionId: question.id, ...option });
+    updatedAnswers.push({ questionGuid: question.guid, selectedOptionGuid: option.guid });
     setSelectedAnswers(updatedAnswers);
   };
 
@@ -384,6 +384,8 @@ const Question = ({
       }
     }
   };
+  console.log(test);
+  
   const handleTouchEnd = (e) => {
     if (e.touches.length === 1) {
       setInitialDistance(null);
@@ -469,21 +471,21 @@ const Question = ({
                 <input
                   className={`option ${getLanguageClass()}`}
                   type="radio"
-                  id={`option-${option.id}`}
-                  name={`option-${question.id}`}
+                  id={`option-${option.guid}`}
+                  name={`option-${question.guid}`}
                   onChange={() => handleOptionSelect(option)}
                   checked={
                     selectedAnswers.find(
                       (answer) =>
-                        answer.questionId === question.id &&
-                        answer.id === option.id
+                        answer.questionGuid === question.guid &&
+                        answer.selectedOptionGuid === option.guid
                     )
                       ? true
                       : false
                   }
                 />
                 <label
-                  htmlFor={`option-${option.id}`}
+                  htmlFor={`option-${option.guid}`}
                   className={getLanguageClass()}
                   dangerouslySetInnerHTML={{
                     __html: `<strong class="chart">${String.fromCharCode(
@@ -504,7 +506,7 @@ const Question = ({
           </div>
         )}
 
-        {Object.values(test?.questions_grouped_by_science || {}).flat().length ? (
+        {Object.values(test?.questions || {}).flat().length ? (
           <div id="flex" className={getLanguageClass()}>
             <>
               {currentQuestionIndex > 0 && (
@@ -516,9 +518,9 @@ const Question = ({
                 </button>
               )}
               <p className={getLanguageClass()}>
-                {currentQuestionIndex + 1} {t.of} {Object.values(test?.questions_grouped_by_science || {}).flat().length}
+                {currentQuestionIndex + 1} {t.of} {Object.values(test?.questions || {}).flat().length}
               </p>
-              {currentQuestionIndex < Object.values(test?.questions_grouped_by_science || {}).flat().length - 1 ? (
+              {currentQuestionIndex < Object.values(test?.questions || {}).flat().length - 1 ? (
                 <button
                   className={`next ${getLanguageClass()}`}
                   onClick={handleNextQuestion}

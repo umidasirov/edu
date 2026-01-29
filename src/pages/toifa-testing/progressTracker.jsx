@@ -75,36 +75,44 @@ const ProgressTracker = ({
   }, [test?.science, t.error]);
 
   const groupQuestionsByScience = () => {
-    if (!test?.questions_grouped_by_science) return [];
+    if (!test?.questions || !Array.isArray(test.questions)) return [];
     
-    const grouped = [];
-    let currentIndex = 0;
+    const grouped = {};
+    const groupOrder = [];
 
-    // Iterate through questions_grouped_by_science in the original order
-    Object.entries(test.questions_grouped_by_science).forEach(([scienceName, questions]) => {
-      const group = {
-        name: scienceName,
-        questions: questions,
-        count: questions.length,
-        startIndex: currentIndex
-      };
+    // Group questions by section
+    test.questions.forEach((question, index) => {
+      const sectionId = question.section || 'unknown';
       
-      grouped.push(group);
-      currentIndex += group.count;
+      if (!grouped[sectionId]) {
+        grouped[sectionId] = [];
+        groupOrder.push(sectionId);
+      }
+      
+      grouped[sectionId].push({ ...question, globalIndex: index });
     });
 
-    return grouped;
+    // Convert to array with proper structure
+    return groupOrder.map(sectionId => {
+      const questions = grouped[sectionId];
+      return {
+        name: sectionId,
+        questions: questions,
+        count: questions.length,
+        startIndex: questions[0].globalIndex
+      };
+    });
   };
 
   const getQuestionStatus = (question, index) => {
     let status = "neutral";
-    const answer = selectedAnswers?.find((ans) => ans.questionId === question.id);
+    const answer = selectedAnswers?.find((ans) => ans.questionGuid === question.guid);
     const isAnswered = !!answer;
     let answerText = "";
 
-    if (isAnswered && answer?.id) {
+    if (isAnswered && answer?.selectedOptionGuid) {
       const selectedOptionIndex = question.options?.findIndex(
-        (opt) => opt.id === answer.id
+        (opt) => opt.guid === answer.selectedOptionGuid
       );
       if (selectedOptionIndex !== -1) {
         answerText = String.fromCharCode(65 + selectedOptionIndex);
@@ -129,20 +137,25 @@ const ProgressTracker = ({
   const formatScienceTitle = (title) => {
     if (!title) return "";
     
-    if (title.startsWith("Barchasi")) {
-      if (title.includes("Pedmahorat") || title.includes("_ped_mahorat")) {
+    // Convert to string if it's a number (section ID)
+    const titleStr = String(title);
+    
+    if (titleStr.startsWith("Barchasi")) {
+      if (titleStr.includes("Pedmahorat") || titleStr.includes("_ped_mahorat")) {
         return `Barchasi${t.pedagogicalSkill}`;
-      } else if (title.includes("Kasbiy") || title.includes("_kasbiy")) {
+      } else if (titleStr.includes("Kasbiy") || titleStr.includes("_kasbiy")) {
         return `Barchasi${t.professionalStandard}`;
       }
     }
 
-    if (title.includes("_kasbiy_stan") || title.includes("Kasbiy_standart")) {
-      return `${title.split('_')[0]}${t.professionalStandard}`;
-    } else if (title.includes("_ped_mahorat") || title.includes("Pedmahorat")) {
-      return `${title.split('_')[0]}${t.pedagogicalSkill}`;
+    if (titleStr.includes("_kasbiy_stan") || titleStr.includes("Kasbiy_standart")) {
+      return `${titleStr.split('_')[0]}${t.professionalStandard}`;
+    } else if (titleStr.includes("_ped_mahorat") || titleStr.includes("Pedmahorat")) {
+      return `${titleStr.split('_')[0]}${t.pedagogicalSkill}`;
+    } else if (titleStr.includes("_")) {
+      return titleStr.split("_")[0];
     } else {
-      return title.split("_")[0];
+      return `Savol Guruhi ${titleStr}`;
     }
   };
 
@@ -160,13 +173,13 @@ const ProgressTracker = ({
             </span>
           </div>
           <div className={`subject-questions ${getLanguageClass()}`}>
-            {science.questions?.map((question, index) => {
-              const globalIndex = science.startIndex + index;
+            {science.questions?.map((question) => {
+              const globalIndex = question.globalIndex;
               const { status, answerText } = getQuestionStatus(question, globalIndex);
 
               return (
                 <div
-                  key={globalIndex}
+                  key={question.guid}
                   className={`circle ${status} ${getLanguageClass()}`}
                   onClick={() => setCurrentQuestionIndex(globalIndex)}
                   style={{ cursor: "pointer" }}
