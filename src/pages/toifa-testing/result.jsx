@@ -7,6 +7,7 @@ import "katex/dist/katex.min.css";
 import parse from "html-react-parser";
 import CircularProgress from "./circularProgress";
 import Analyzer from "../../components/analyzer/analyzer";
+import { api } from "../../App";
 
 const Results = ({ results, test, selectedAnswers, loading }) => {
   const navigate = useNavigate();
@@ -168,7 +169,7 @@ const Results = ({ results, test, selectedAnswers, loading }) => {
   const renderQuestionText = (text) => {
     if (typeof text !== "string") return "";
 
-    const baseUrl = "https://edumark.adxamov.uz";
+    const baseUrl = api;
     text = text.replace(
       /<img\s+src=["'](\/media[^"']+)["']/g,
       (match, path) => `<img src="${baseUrl}${path}" />`
@@ -219,13 +220,20 @@ const Results = ({ results, test, selectedAnswers, loading }) => {
 
       <div className={`result-inner ${getLanguageClass()}`}>
         <div className={`text-inner-left ${getLanguageClass()}`}>
-          <p className={getLanguageClass()}><span>{t.totalQuestions}</span> {results.total_questions}</p>
-          <p className={getLanguageClass()}><span>{t.correctAnswers}</span> {results.ai.correct_answers}</p>
-          <p className={getLanguageClass()}><span>{t.incorrectAnswers}</span> {results.ai.incorrect_answers}</p>
-          <p className={getLanguageClass()}><span>{t.unansweredQuestions}</span> {results.unanswered_questions}</p>
-          <p className={getLanguageClass()}><span>{t.percentageCorrect}</span> {(results.ai.correct_answers / results.total_questions * 100).toFixed(2)}%</p>
-          <p className={getLanguageClass()}><span>{t.timeSpent}</span> {results.time_taken}</p>
-          <p className={getLanguageClass()}><span>{t.totalScore}</span> {results.total_score}</p>
+          <p className={getLanguageClass()}><span>{t.totalQuestions}</span> {results.score.total_questions}</p>
+          <p className={getLanguageClass()}><span>{t.correctAnswers}</span> {results.score.earned_score}</p>
+          <p className={getLanguageClass()}><span>{t.incorrectAnswers}</span> {results.score.total_questions - results.score.earned_score}</p>
+          <p className={getLanguageClass()}><span>{t.unansweredQuestions}</span> 0</p>
+          <p className={getLanguageClass()}><span>{t.percentageCorrect}</span> {(results.score.earned_score / results.score.total_questions * 100).toFixed(2)}%</p>
+          <p className={getLanguageClass()}><span>{t.timeSpent}</span> {results.attempt.finished_at && results.attempt.started_at ? 
+            (() => {
+              const start = new Date(results.attempt.started_at);
+              const end = new Date(results.attempt.finished_at);
+              const diff = Math.floor((end - start) / 1000);
+              return `${Math.floor(diff / 60)} daqiqa ${diff % 60} soniya`;
+            })() : "0 daqiqa"
+          }</p>
+          <p className={getLanguageClass()}><span>{t.totalScore}</span> {results.score.earned_score}/{results.score.total_score}</p>
         </div>
         
 
@@ -302,8 +310,8 @@ const Results = ({ results, test, selectedAnswers, loading }) => {
           </div>
 
           <CircularProgress
-            value={results.ai.correct_answers}
-            maxValue={results.total_questions}
+            value={results.score.earned_score}
+            maxValue={results.score.total_score}
           />
         </div>
       </div>
@@ -311,7 +319,7 @@ const Results = ({ results, test, selectedAnswers, loading }) => {
 
 
       <div className={`result-message ${getLanguageClass()}`}>
-        <p className={getLanguageClass()}>{results.ai_text}</p>
+        <p className={getLanguageClass()}>Test natijalari saqlandi</p>
         <button onClick={() => navigate('/toifa-imtihonlari')} className={getLanguageClass()}>
           {cta}
         </button>

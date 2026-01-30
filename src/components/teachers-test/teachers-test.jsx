@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import "./teachers-test.scss";
 import { Link } from 'react-router-dom';
+import { api } from '../../App';
 const TeachersTest = () => {
     const language = localStorage.getItem("language") || "uz";
     const [animatedSubjects, setAnimatedSubjects] = useState([]);
-
+    const [subjects, setSubjects] = useState([]);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(null);
     const translations = {
         uz: {
             testsCommon: [
@@ -178,7 +181,35 @@ const TeachersTest = () => {
         }
         return label;
     };
+    useEffect(() => {
+        const fetchTests = async () => {
+            const token = localStorage.getItem("accessToken");
+            setLoading(true);
+            try {
+                 const response = await fetch(`${api}/category_exams/testsubjects/`, {
+                                method: "GET",
+                                headers: {
+                                    "Content-Type": "application/json",
+                                    Authorization: `Bearer ${token}`,
+                                },
+                            });
+                if (!response.ok) throw new Error("Network error");
 
+                const data = await response.json();
+                console.log(data);
+
+                setSubjects(data);
+                console.log(data);
+
+            } catch (err) {
+                setError(err.message);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchTests();
+    }, []);
 
 
     const languageClass = getLanguageClass();
@@ -190,7 +221,11 @@ const TeachersTest = () => {
                 <div className="tbrow">
                     <div className={`cell ${languageClass}`}>
                         <ul className={`subjects-list sl-3 ${languageClass}`}>
-                            {Object.entries(t.subjects).map(([key, subj], index) => (
+                            {Object.entries(t.subjects).filter(([key, subj]) => 
+                                subjects.some(subject => subject.title.includes(subj.label))
+                            ).map(([key, subj], index) => {
+                                const matchingTest = subjects.find(subject => subject.title.includes(subj.label));
+                                return (
                                 <li
                                     key={key}
                                     className="subject-card"
@@ -220,7 +255,7 @@ const TeachersTest = () => {
                                                 ))}
                                             </ul>
                                             <div className="btn-card">
-                                                <Link to={`/toifa-imtihonlari/${formatLink(subj.label)}`} className={languageClass}>
+                                                <Link to={`/toifa-imtihonlari/${matchingTest.guid}`} className={languageClass}>
                                                     <button style={{ background: colors[index % colors.length] }}>
                                                         {t.viewAll}
                                                     </button>
@@ -230,13 +265,13 @@ const TeachersTest = () => {
                                     </div>
 
                                 </li>
-                            ))}
+                            ) })}
                         </ul>
-                            <p>
+                        <p>
                             <Link to="/toifa-imtihonlari" className={languageClass}>
                                 {t.viewAll}
                             </Link>
-                            </p>
+                        </p>
 
                     </div>
                 </div>

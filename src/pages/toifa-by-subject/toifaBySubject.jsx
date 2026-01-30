@@ -20,7 +20,8 @@ const ToifaBySubject = () => {
     const language = localStorage.getItem("language") || "uz";
     const [success, setSuccess] = useState(false);
     const [isFreeTestAvailable, setIsFreeTestAvailable] = useState(false);
-
+    const guid = useParams().subject;
+    
     const translations = {
         uz: {
             title: "o'zingizni toifa imtixoni uchun shu yerda sinang!",
@@ -98,14 +99,12 @@ const ToifaBySubject = () => {
         const fetchTests = async () => {
             setLoading(true);
             try {
-                const response = await fetch(`${api}/tests_title/`);
+                const response = await fetch(`${api}/category_exams/testsubjects/${guid}/tests/`);
                 if (!response.ok) throw new Error("Network error");
 
                 const data = await response.json();
-                const filteredTests = data.tests.filter(test =>
-                    formatLink(test.title).includes(formatLink(subject))
-                );
-                setTests(filteredTests);
+                
+                setTests(data);
             } catch (err) {
                 setError(err.message);
             } finally {
@@ -161,8 +160,12 @@ const ToifaBySubject = () => {
             setLoading(false);
         }
     };
-
+    
     const handleConfirmStartTest = async () => {
+        console.log(selectedFanName);
+        console.log(selectedTestId);
+        
+        
         try {
             const token = localStorage.getItem("accessToken");
             if (!token) {
@@ -179,7 +182,7 @@ const ToifaBySubject = () => {
                 }));
             }
 
-            const response = await fetch(`${api}/start-test/`, {
+            const response = await fetch(`${api}/category_exams/test/${selectedTestId}/start/`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -206,7 +209,10 @@ const ToifaBySubject = () => {
                 setTimeout(() => setSuccess(false), 5000);
                 return;
             }
-
+            console.log(selectedFanName);
+            console.log(selectedTestId);
+            
+            
             // Muvaffaqiyatli bo'lsa testni boshlaymiz
             localStorage.setItem("startTest", selectedTestId);
             setStartTest(selectedTestId);
@@ -232,11 +238,11 @@ const ToifaBySubject = () => {
     const renderStartButton = (test) => (
         <button
             type="button"
-            onClick={() => handleStartButtonClick(test.id, test.price, test.title)}
+            onClick={() => handleStartButtonClick(test.guid, test.price, test.testsubject.title)}
             className={getLanguageClass()}
             disabled={loading}
         >
-            {loading && selectedTestId === test.id ? (
+            {loading && selectedTestId === test.guid ? (
                 <span className="loader-small"></span>
             ) : (
                 t.startTest
@@ -267,10 +273,10 @@ const ToifaBySubject = () => {
                     <tbody className={getLanguageClass()}>
                         {tests.length > 0 ? (
                             tests.map((test, testIndex) => (
-                                <tr key={test.id} className={getLanguageClass()}>
+                                <tr key={test.guid} className={getLanguageClass()}>
                                     <td className={getLanguageClass()}>{testIndex + 1}</td>
-                                    <td className={getLanguageClass()}>{test.title}</td>
-                                    <td className={`${getLanguageClass()} tim`}>{test.time}</td>
+                                    <td className={getLanguageClass()}>{test.name}</td>
+                                    <td className={`${getLanguageClass()} tim`}>{test.duration}</td>
                                     <td>{renderStartButton(test)}</td>
                                 </tr>
                             ))

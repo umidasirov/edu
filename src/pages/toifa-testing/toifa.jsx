@@ -350,85 +350,61 @@ const ToifaDetail = () => {
     const calculateResults = async () => {
         setResLoading(true);
 
-        // Get saved timings from localStorage
-        const savedStartTime = localStorage.getItem("startTime")
-            ? new Date(localStorage.getItem("startTime"))
-            : startTime;
-        const savedQuestionStartTime = localStorage.getItem("questionStartTime")
-            ? new Date(localStorage.getItem("questionStartTime"))
-            : questionStartTime;
-
-        const currentTime = new Date();
-        const totalTimeTaken = Math.floor((currentTime - savedStartTime) / 1000);
-        const timeSpent = Math.floor((currentTime - savedQuestionStartTime) / 1000);
-
-        const correctAnswersCount = selectedAnswers.filter(
-            (answer) => answer.is_staff
-        ).length;
-        const totalQuestions = groupedQuestions.length || test?.questions.length;
-
-        const totalMinutes = String(Math.floor(totalTimeTaken / 60)).padStart(2, "0");
-        const totalSeconds = String(totalTimeTaken % 60).padStart(2, "0");
-
-        const formattedTime = `${Math.floor(totalTimeTaken / 60)} daqiqa ${totalTimeTaken % 60} soniya`;
-
-        const answersData = selectedAnswers.map((answer) => ({
-            question_id: answer.questionId,
-            selected_option_id: answer.id,
-        }));
-
-        const resultData = {
-            user: profileData.id,
-            test_title: test.title,
-            correct_answers: correctAnswersCount,
-            incorrect_answers: totalQuestions - correctAnswersCount,
-            unanswered_questions: totalQuestions - selectedAnswers.length,
-            total_questions: totalQuestions,
-            percentage_correct: ((correctAnswersCount / totalQuestions) * 100).toFixed(2),
-            total_time_taken: `00:${totalMinutes}:${totalSeconds}`,
-            time_per_question: JSON.parse(localStorage.getItem("timePerQuestion")) || {},
-            time_taken: formattedTime,
-        };
-
         try {
-            const response = await fetch(`${api}/statistics/`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(resultData),
-            });
+            // Prepare answers data with guid format
+            const answersData = selectedAnswers.map((answer) => ({
+                question_guid: answer.questionId,
+                option_guid: answer.id,
+            }));
 
-            if (!response.ok) {
-                throw new Error("Natijalarni saqlashda xato yuz berdi.");
+            // Get attempt guid from test data
+            const attemptGuid = test?.attempt?.guid;
+
+            if (!attemptGuid) {
+                throw new Error("Attempt GUID topilmadi.");
             }
 
-            const finishResponse = await fetch(`${api}/finish/${test.id}/`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ answers: answersData }),
-            });
+            // Step 1: Submit answers to the submit endpoint
+            const submitResponse = await fetch(
+                `https://api.edumark.uz/category_exams/attempt/${attemptGuid}/submit/`,
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+                    },
+                    body: JSON.stringify({ answers: answersData }),
+                }
+            );
 
-            if (!finishResponse.ok) {
+            if (!submitResponse.ok) {
                 throw new Error("Testing natijalarini saqlashda xato yuz berdi.");
             }
 
+            const submitData = await submitResponse.json();
+            console.log("Submit response:", submitData);
 
+            // Step 2: Get results from the result endpoint
+            const resultResponse = await fetch(
+                `${api}/category_exams/attempt/${attemptGuid}/result/`,
+                {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+                    },
+                }
+            );
 
-            // const responseGrade = await fetch(`${api}/finish/${test.id}/`);
+            if (!resultResponse.ok) {
+                throw new Error("Natijalarni olishda xato yuz berdi.");
+            }
 
-            // if (!responseGrade.ok) {
-            //     throw new Error(`HTTP xato! Status: ${responseGrade.status}`);
-            // }
+            const resultData = await resultResponse.json();
+            console.log("Result response:", resultData);
 
-            // const data = await responseGrade.json();
-            // setResultGrade(data);
-
-            const finishData = await finishResponse.json();
-            const totalScore = finishData.total_score;
-            setResults({ ...resultData, total_score: totalScore, ai: finishData });
+            // Set results with the new structure
+            setResults(resultData);
         } catch (error) {
             console.error(error.message);
         } finally {
