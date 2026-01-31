@@ -349,12 +349,13 @@ const ToifaDetail = () => {
     // Calculate results function
     const calculateResults = async () => {
         setResLoading(true);
+        
 
         try {
             // Prepare answers data with guid format
-            const answersData = selectedAnswers.map((answer) => ({
-                question_guid: answer.questionId,
-                option_guid: answer.id,
+             const answersData = selectedAnswers.map((answer) => ({
+                question_guid: answer.questionGuid,
+                option_guid: answer.selectedOptionGuid,
             }));
 
             // Get attempt guid from test data

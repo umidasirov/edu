@@ -425,7 +425,8 @@ const Question = ({
       setInitialDistance(null);
     }
   };
-
+  console.log("mana:",question);
+  
   return (
     <div className="testing-container mo">
       {isZoomed && (
@@ -488,13 +489,14 @@ const Question = ({
               <div className="option-content">
                 <input
                   type="radio"
-                  id={`option-${option.id}`}
-                  name={`option-${question.id}`}
-                  onChange={() => handleOptionSelect(option)}
-                  checked={isOptionSelected(option.id)}
+                  id={`option-${option.guid}`}
+                  name={`option-${option.guid}`}
+                  onChange={() => handleOptionSelect(option.guid)}
+                  checked={isOptionSelected(option.guid)}
                 />
+                  <p>{option.guid}</p>
                 <label
-                  htmlFor={`option-${option.id}`}
+                  htmlFor={`option-${option.guid}`}
                   dangerouslySetInnerHTML={{
                     __html: `<strong class="chart">${String.fromCharCode(
                       65 + index

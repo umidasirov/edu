@@ -111,7 +111,7 @@ const ProfileStatistics = () => {
   useEffect(() => {
     const fetchLoginActivity = async () => {
       try {
-        const response = await fetch(`${api}/user-profile/`, {
+        const response = await fetch(`${api}/users/profile`, {
           method: "GET",
           headers: {
             Authorization: `Bearer ${tokenn}`,
@@ -273,7 +273,7 @@ const ProfileStatistics = () => {
           }}
         />
       </div>
-      <div className={`for-width ${getLanguageClass()}`}>
+      {/* <div className={`for-width ${getLanguageClass()}`}>
         <div className={`calendar-heatmap ${getLanguageClass()}`}>
           <div className={`year-filter ${getLanguageClass()}`}>
             <label htmlFor="year-select" className={getLanguageClass()}>{t.activityYear}</label>
@@ -318,7 +318,7 @@ const ProfileStatistics = () => {
             />
           </div>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 };

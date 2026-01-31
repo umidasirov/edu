@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import "./complatedTests.scss";
 
-const ComplatedTests = ({ id }) => {
+const ComplatedTests = ({ id, data }) => {
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -11,23 +11,36 @@ const ComplatedTests = ({ id }) => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch(`https://edu-api.adxamov.uz/api/user-statistics/?user_id=${id}`);
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
+    if (data) {
+      // Map the new data structure to the old one
+      const mappedData = data.map(item => ({
+        test_title: item.test_name,
+        created_at: item.started_at,
+        total_questions: item.total_questions,
+        correct_answers: item.correct_answers,
+        percentage_correct: item.percent
+      }));
+      setStats({ statistics: mappedData });
+      setLoading(false);
+    } else {
+      const fetchData = async () => {
+        try {
+          const response = await fetch(`https://edu-api.adxamov.uz/api/user-statistics/?user_id=${id}`);
+          if (!response.ok) {
+            throw new Error('Network response was not ok');
+          }
+          const data = await response.json();
+          setStats(data);
+        } catch (err) {
+          setError(err.message);
+        } finally {
+          setLoading(false);
         }
-        const data = await response.json();
-        setStats(data);
-      } catch (err) {
-        setError(err.message);
-      } finally {
-        setLoading(false);
-      }
-    };
+      };
 
-    fetchData();
-  }, [id]);
+      fetchData();
+    }
+  }, [data, id]);
 
   const indexOfLastTest = currentPage * testsPerPage;
   const indexOfFirstTest = indexOfLastTest - testsPerPage;

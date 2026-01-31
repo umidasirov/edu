@@ -213,7 +213,8 @@ const TeachersTest = () => {
 
 
     const languageClass = getLanguageClass();
-
+    console.log(subjects);
+    
     return (
         <div className={`t-tests ${languageClass}`} id='subject-tests'>
 

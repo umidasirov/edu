@@ -5,30 +5,29 @@ import { api } from "../../App";
 import InputMask from "react-input-mask";
 import "./edit-profile.scss";
 import Success from "../../components/success-message/success";
+import { use } from "react";
 
 const regionsURL =
   "https://raw.githubusercontent.com/MIMAXUZ/uzbekistan-regions-data/master/JSON/regions.json";
 const districtsURL =
   "https://raw.githubusercontent.com/MIMAXUZ/uzbekistan-regions-data/master/JSON/districts.json";
 
+
 const EditProfile = () => {
-  const { access } = useContext(AccessContext);
+  const { access, profileData: profileDataFromContext } = useContext(AccessContext);
   const navigate = useNavigate();
   const [regions, setRegions] = useState([]);
   const [selectedRegion, setSelectedRegion] = useState("");
   const [districts, setDistricts] = useState([]);
+  const [username, setUsername] = useState("");
   const [selectedDistrict, setSelectedDistrict] = useState("");
   const [profileData, setProfileData] = useState({});
   const [errors, setErrors] = useState({});
-  const [formData, setFormData] = useState({
-    name: "",
-    username: "",
-    phone_number: "",
-    surname: "",
-    email: "",
-    password: "",
-    age: "",
-  });
+  const [formData, setFormData] = useState({});
+  console.log(formData);
+  console.log(profileDataFromContext);
+  
+  
   const [success, setSuccess] = useState(false);
   const token = localStorage.getItem("accessToken");
   const language = localStorage.getItem("language") || "uz";
@@ -132,6 +131,19 @@ const EditProfile = () => {
     return language === "ru" || language === "kaa" ? "ru" : "";
   };
 
+
+  const formatDateForDisplay = (dateString) => {
+  if (!dateString) return "";
+  const [year, month, day] = dateString.split('-');
+  return `${day}.${month}.${year}`;
+};
+
+const formatDateForAPI = (dateString) => {
+  if (!dateString) return "";
+  const [day, month, year] = dateString.split('.');
+  return `${year}-${month}-${day}`;
+};
+
   useEffect(() => {
     const fetchRegions = async () => {
       try {
@@ -150,7 +162,7 @@ const EditProfile = () => {
   useEffect(() => {
     const userProfile = async () => {
       try {
-        const response = await fetch(`${api}/user-profile/`, {
+        const response = await fetch(`${api}/users/profile/`, {
           method: "GET",
           headers: {
             Authorization: `Bearer ${token}`,
@@ -161,20 +173,26 @@ const EditProfile = () => {
           throw new Error("Error fetching user data");
         const data = await response.json();
         setFormData({
-          name: data.name || "",
-          username: data.username || "",
-          phone_number: data.phone_number || "",
-          surname: data.surname || "",
-          email: data.email || "",
-          password: "",
-          age: data.age || "",
+          first_name: data.first_name || data.name || "",
+          last_name: data.last_name || data.surname || "",
+          phone: data.phone || data.phone_number || "",
+          birth_date: formatDateForDisplay(data.birth_date) || formatDateForDisplay(data.age) || "",
           gender: data.gender || "",
+          email: data.email || "",
+          district: data.district || "",
+          region: data.region || "",
+          username: data.username || "",
+          password: "",
         });
-        setSelectedRegion(data.province || "");
-        setSelectedDistrict(data.district || "");
-        if (data.province) {
-          fetchDistricts(data.province);
+        setUsername(data.username || "");
+        
+        // Find region by name
+        const regionObj = regions.find(r => r.name_uz === data.region || r.name_ru === data.region);
+        if (regionObj) {
+          setSelectedRegion(regionObj.id);
+          fetchDistricts(regionObj.id);
         }
+        setSelectedDistrict(data.district || "");
       } catch (error) {
         console.error("Failed to fetch profile data:", error.message);
       }
@@ -200,12 +218,16 @@ const EditProfile = () => {
   const handleRegionChange = (event) => {
     const selectedRegionId = event.target.value;
     setSelectedRegion(selectedRegionId);
+    setFormData(prev => ({ ...prev, region: selectedRegionId }));
     fetchDistricts(selectedRegionId);
     setSelectedDistrict("");
+    setFormData(prev => ({ ...prev, district: "" }));
   };
 
   const handleDistrictChange = (event) => {
-    setSelectedDistrict(event.target.value);
+    const value = event.target.value;
+    setSelectedDistrict(value);
+    setFormData(prev => ({ ...prev, district: value }));
   };
 
   const handleChange = (event) => {
@@ -233,16 +255,15 @@ const EditProfile = () => {
 
   const validateForm = () => {
     let errors = {};
-    if (!formData.name.trim()) errors.name = t.name + t.requiredField;
-    if (!formData.surname.trim()) errors.surname = t.surname + t.requiredField;
-    if (!formData.username.trim()) errors.username = t.username + t.requiredField;
-    if (!formData.phone_number.trim() || formData.phone_number.includes("_"))
-      errors.phone_number = t.phoneError;
-    if (!formData.age.trim() || formData.age.includes("_")) {
-      errors.age = t.birthDate + t.requiredField;
+    if (!formData.first_name.trim()) errors.first_name = t.name + t.requiredField;
+    if (!formData.last_name.trim()) errors.last_name = t.surname + t.requiredField;
+    if (!formData.phone.trim() || formData.phone.includes("_"))
+      errors.phone = t.phoneError;
+    if (!formData.birth_date.trim() || formData.birth_date.includes("_")) {
+      errors.birth_date = t.birthDate + t.requiredField;
     } else {
-      let ageError = validateDate(formData.age);
-      if (ageError) errors.age = ageError;
+      let dateError = validateDate(formData.birth_date);
+      if (dateError) errors.birth_date = dateError;
     }
     if (!selectedRegion) errors.region = t.region + t.requiredField;
     if (!selectedDistrict) errors.district = t.district + t.requiredField;
@@ -261,15 +282,26 @@ const EditProfile = () => {
       return;
     }
     try {
+      const regionObj = regions.find(r => r.id == selectedRegion);
+      const regionName = regionObj ? (language === "ru" ? regionObj.name_ru : regionObj.name_uz.replace(/�/g, "'")) : selectedRegion;
       let updatedData = {
-        ...formData,
-        province: selectedRegion,
-        district: selectedDistrict,
+        first_name: formData.first_name,
+        last_name: formData.last_name,
+        phone: formData.phone,
+        birth_date: formatDateForAPI(formData.birth_date),
+        gender: formData.gender,
+        email: formData.email,
+        region: regionName.name_uz,
+        district: formData.district,
+        username: username,
+        password: formData.password,
       };
       if (!updatedData.password) {
         delete updatedData.password;
       }
-      const response = await fetch(`${api}/user-update/`, {
+      console.log(updatedData);
+      
+      const response = await fetch(`${api}/users/profile/`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -307,30 +339,30 @@ const EditProfile = () => {
               <div className={`edit-profile-container ${getLanguageClass()}`}>
                 <form onSubmit={handleSubmit} className={getLanguageClass()}>
                   <div className={`edit-content ${getLanguageClass()}`}>
-                    <div className={`input-row ${errors.name ? "err-border" : ""} ${getLanguageClass()}`}>
+                    <div className={`input-row ${errors.first_name ? "err-border" : ""} ${getLanguageClass()}`}>
                       <input
                         type="text"
                         placeholder={t.name}
-                        name="name"
-                        value={formData.name}
+                        name="first_name"
+                        value={formData.first_name}
                         onChange={handleChange}
                         className={getLanguageClass()}
                       />
-                      {errors.name && (
-                        <span className={`error ${getLanguageClass()}`}>{errors.name}</span>
+                      {errors.first_name && (
+                        <span className={`error ${getLanguageClass()}`}>{errors.first_name}</span>
                       )}
                     </div>
-                    <div className={`input-row ${errors.surname ? "err-border" : ""} ${getLanguageClass()}`}>
+                    <div className={`input-row ${errors.last_name ? "err-border" : ""} ${getLanguageClass()}`}>
                       <input
                         type="text"
                         placeholder={t.surname}
-                        name="surname"
-                        value={formData.surname}
+                        name="last_name"
+                        value={formData.last_name}
                         onChange={handleChange}
                         className={getLanguageClass()}
                       />
-                      {errors.surname && (
-                        <span className={`error ${getLanguageClass()}`}>{errors.surname}</span>
+                      {errors.last_name && (
+                        <span className={`error ${getLanguageClass()}`}>{errors.last_name}</span>
                       )}
                     </div>
                     <div className={`input-row ${errors.username ? "err-border" : ""} ${getLanguageClass()}`}>
@@ -338,42 +370,42 @@ const EditProfile = () => {
                         type="text"
                         placeholder={t.username}
                         name="username"
-                        value={formData.username}
-                        onChange={handleChange}
+                        value={username}
+                        onChange={(e) => { setUsername(e.target.value); setFormData(prev => ({ ...prev, username: e.target.value })); }}
                         className={getLanguageClass()}
                       />
                       {errors.username && (
                         <span className={`error ${getLanguageClass()}`}>{errors.username}</span>
                       )}
                     </div>
-                    <div className={`input-row ${errors.phone_number ? "err-border" : ""} ${getLanguageClass()}`}>
+                    <div className={`input-row ${errors.phone ? "err-border" : ""} ${getLanguageClass()}`}>
                       <InputMask
                         mask="+\9\9\8 (99) 999-99-99"
                         placeholder={t.phone}
-                        name="phone_number"
-                        value={formData.phone_number}
+                        name="phone"
+                        value={formData.phone}
                         onChange={handleChange}
                         className={getLanguageClass()}
                       >
                         {(inputProps) => <input {...inputProps} type="text" className={getLanguageClass()}/>}
                       </InputMask>
-                      {errors.phone_number && (
-                        <span className={`error ${getLanguageClass()}`}>{errors.phone_number}</span>
+                      {errors.phone && (
+                        <span className={`error ${getLanguageClass()}`}>{errors.phone}</span>
                       )}
                     </div>
-                    <div className={`input-row ${errors.age ? "err-border" : ""} ${getLanguageClass()}`}>
+                    <div className={`input-row ${errors.birth_date ? "err-border" : ""} ${getLanguageClass()}`}>
                       <InputMask
                         mask="99.99.9999"
                         placeholder={t.birthDate}
-                        name="age"
-                        value={formData.age}
+                        name="birth_date"
+                        value={formData.birth_date}
                         onChange={handleChange}
                         className={getLanguageClass()}
                       >
                         {(inputProps) => <input {...inputProps} type="text" className={getLanguageClass()}/>}
                       </InputMask>
-                      {errors.age && (
-                        <span className={`error ${getLanguageClass()}`}>{errors.age}</span>
+                      {errors.birth_date && (
+                        <span className={`error ${getLanguageClass()}`}>{errors.birth_date}</span>
                       )}
                     </div>
                     <div className={`input-row ${errors.email ? "err-border" : ""} ${getLanguageClass()}`}>

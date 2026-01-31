@@ -179,7 +179,27 @@ const Profile = () => {
                 <Link to="/schools/toifa-imtihonlari" className={getLanguageClass()}>{t.start}</Link>
               </div>
 
-              <ComplatedTests id={profileData.id} />
+              <ComplatedTests id={profileData.id} data={profileData.attempts_data} />
+
+              {/* {profileData.worked_tests && profileData.worked_tests.length > 0 && (
+                <div className="worked-tests">
+                  <h2>Ishlangan testlar</h2>
+                  {profileData.worked_tests.map(test => (
+                    <div key={test.test_guid} className="worked-test-item">
+                      <h3>{test.test_name}</h3>
+                      <p>Urinishlar soni: {test.attempts.length}</p>
+                      <div className="attempts">
+                        {test.attempts.slice(0, 3).map((attempt, index) => (
+                          <div key={index} className="attempt">
+                            <span>{attempt.percent}%</span>
+                            <span>{new Date(attempt.finished_at).toLocaleDateString()}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )} */}
             </div>
             <div className={`right ${getLanguageClass()}`}>
               <div className={`user-profile ${getLanguageClass()}`}>

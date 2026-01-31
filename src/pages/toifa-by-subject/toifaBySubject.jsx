@@ -251,7 +251,8 @@ const ToifaBySubject = () => {
     );
 
     if (loading) return <Loading />;
-
+    console.log(tests);
+    
     return (
         <div className={`toifa ${getLanguageClass()}`}>
             {success && <Success text={error} />}

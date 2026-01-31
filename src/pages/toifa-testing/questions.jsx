@@ -384,7 +384,6 @@ const Question = ({
       }
     }
   };
-  console.log(test);
   
   const handleTouchEnd = (e) => {
     if (e.touches.length === 1) {
@@ -472,7 +471,7 @@ const Question = ({
                   className={`option ${getLanguageClass()}`}
                   type="radio"
                   id={`option-${option.guid}`}
-                  name={`option-${question.guid}`}
+                  name={`option-${option.guid}`}
                   onChange={() => handleOptionSelect(option)}
                   checked={
                     selectedAnswers.find(
