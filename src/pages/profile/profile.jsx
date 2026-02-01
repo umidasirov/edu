@@ -116,16 +116,6 @@ const Profile = () => {
   const [userRank, setUserRank] = useState(null);
 
 
-  useEffect(() => {
-    fetch(`${api}/user_rank/${profileData.id}/`)
-      .then(response => response.json())
-      .then(data => {
-        setUserRank(data);
-      })
-      .catch(error => {
-        console.error('Error fetching user rank:', error);  
-      });
-  }, [profileData.id]);
 
 
   if (profileLoading) {

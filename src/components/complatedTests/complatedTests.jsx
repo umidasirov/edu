@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import "./complatedTests.scss";
+import { api } from '../../App';
 
 const ComplatedTests = ({ id, data }) => {
   const [stats, setStats] = useState(null);
@@ -25,7 +26,7 @@ const ComplatedTests = ({ id, data }) => {
     } else {
       const fetchData = async () => {
         try {
-          const response = await fetch(`https://edu-api.adxamov.uz/api/user-statistics/?user_id=${id}`);
+          const response = await fetch(`${api}/category_exams/attempt/${id}/result/`);
           if (!response.ok) {
             throw new Error('Network response was not ok');
           }

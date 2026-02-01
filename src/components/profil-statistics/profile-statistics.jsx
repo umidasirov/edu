@@ -116,7 +116,6 @@ const ProfileStatistics = () => {
           console.error(t.userError);
           return;
         }
-        console.log(data);
         
         const loginDate = data.last_login.split("T")[0];
         const formattedLoginActivityLog = [

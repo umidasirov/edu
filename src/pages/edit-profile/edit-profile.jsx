@@ -24,8 +24,6 @@ const EditProfile = () => {
   const [profileData, setProfileData] = useState({});
   const [errors, setErrors] = useState({});
   const [formData, setFormData] = useState({});
-  console.log(formData);
-  console.log(profileDataFromContext);
   
   
   const [success, setSuccess] = useState(false);

@@ -36,18 +36,17 @@ const Rating = ({ userId, allUsers, balance }) => {
     return language === "ru" || language === "kaa" ? "ru" : "";
   };
 
-  useEffect(() => {
-    fetch(`${api}/user_rank/${userId.id}/`)
-      .then(response => response.json()) 
-      .then(data => {
-        setUserRank(data); 
-        setResults(data.results || []); 
-      })
-      .catch(error => {
-        console.log("");  
-        // console.error('Error fetching user rank:', error);  
-      });
-  }, [userId.id]); 
+  // useEffect(() => {
+  //   fetch(`${api}/user_rank/${userId.id}/`)
+  //     .then(response => response.json()) 
+  //     .then(data => {
+  //       setUserRank(data); 
+  //       setResults(data.results || []); 
+  //     })
+  //     .catch(error => {
+  //       console.error('Error fetching user rank:', error);  
+  //     });
+  // }, [userId.id]); 
 
   const formattedNumber = new Intl.NumberFormat('ru-RU').format(balance ? balance : 0);
 

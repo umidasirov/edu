@@ -92,34 +92,6 @@ const AccessProvider = ({ children }) => {
     userProfile();
   }, [api]);
 
-  useEffect(() => {
-    const users = async () => {
-      try {
-        const response = await fetch(`${api}/users_count/`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
-
-        if (!response.ok) {
-          const errorText = await response.text();
-          throw new Error(`Tarmoq xatosi: ${response.status} - ${errorText}`);
-        }
-
-        const data = await response.json();
-
-        // Ma'lumot obyekt yoki ro'yxat bo'lsa, setProfileData orqali holatga solamiz
-        setAllUsers(data);
-        
-
-      } catch (error) {
-        console.error("Failed to fetch profile data:", error.message);
-      }
-    };
-
-    users();
-  }, []);
 
   useEffect(() => {
     const randomNum = Math.floor(Math.random() * 101);

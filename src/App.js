@@ -57,7 +57,7 @@ const useFetchProfile = () => {
           return;
         }
         // const response = await fetch(`${api}/user-profile/`, {
-        const response = await fetch(`${api}/user-profile/`, {
+        const response = await fetch(`${api}/users/profile`, {
           method: "GET",
           headers: {
             Authorization: `Bearer ${token}`,
