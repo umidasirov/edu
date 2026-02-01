@@ -1,14 +1,14 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import "./contact.scss";
 import { Link } from 'react-router-dom';
 import InputMask from "react-input-mask";
 import { api } from '../../App';
+import { AccessContext } from '../../AccessContext';
 
 
 const Contact = ({ isHomepage = false }) => {
     const language = localStorage.getItem('language') || 'uz';
     const [phone, setPhone] = useState("");
-
     const translations = {
         kaa: {
             title: "Биз билан байланысыңыз",
@@ -103,6 +103,9 @@ const Contact = ({ isHomepage = false }) => {
             networkError: "Network error. Please try again later."
         }
     };
+    const {
+    profileData,
+  } = useContext(AccessContext);
 
     const t = translations[language] || translations.uz;
     const isCyrillic = ['kaa', 'ru'].includes(language);
@@ -115,31 +118,31 @@ const Contact = ({ isHomepage = false }) => {
     const [msgLoad, setMsgLoad] = useState(false);
 
     function normalizePhoneNumber(phone) {
-  return phone.replace(/[^\d]/g, '');
-}
-
+        return phone.replace(/[^\d]/g, '');
+    }
+    
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        setMsgLoad(true)
-
+        // setMsgLoad(true)
+        const data = {
+            user_id: profileData.id || null,
+            ism: name,
+            telefon: normalizePhoneNumber(phone),
+            xabar: message,
+        }
+        // console.log(JSON.stringify({
+        //             ...data
+        //         }));
         try {
-            const response = await fetch(`${api}/send-telegram/`, {
+            const response = await fetch(`${api}/users/support/send/`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
                 },
                 body: JSON.stringify({
-                    message: [
-                        "📌 Yangi xabar!",
-                        "",
-                        `👤 Ism: ${name || "Ko'rsatilmagan"}`,
-                        `📧 Telegram: https://t.me/${email || "Ko'rsatilmagan"}`,
-                        `📞 Telefon: +${normalizePhoneNumber(phone) || "Ko'rsatilmagan"}`,
-                        `✉️ Xabar: ${message || "Ko'rsatilmagan"}`,
-                        "",
-                        `⏳ ${new Date().toLocaleString()}`
-                    ].join('\n')
+                    ...data
                 }),
             });
 
@@ -162,7 +165,7 @@ const Contact = ({ isHomepage = false }) => {
 
     const getLanguageClass = () => {
         return language === "ru" || language === "kaa" ? "ru" : "";
-      };
+    };
 
     return (
         <div id='contact-2' className={isCyrillic ? 'ru' : ''}>

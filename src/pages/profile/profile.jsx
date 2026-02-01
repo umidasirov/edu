@@ -123,8 +123,7 @@ const Profile = () => {
         setUserRank(data);
       })
       .catch(error => {
-        console.log("");
-        // console.error('Error fetching user rank:', error);  
+        console.error('Error fetching user rank:', error);  
       });
   }, [profileData.id]);
 

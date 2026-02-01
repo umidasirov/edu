@@ -94,24 +94,11 @@ const ProfileStatistics = () => {
     return language === "ru" || language === "kaa" ? "ru" : "";
   };
 
-  useEffect(() => {
-    const fetchSciences = async () => {
-      try {
-        const response = await fetch(`${api}/sciences/`);
-        if (!response.ok) throw new Error(t.scienceError);
-        const data = await response.json();
-        setSciences(data);
-      } catch (error) {
-        console.error(error.message);
-      }
-    };
-    fetchSciences();
-  }, [t.scienceError]);
 
   useEffect(() => {
     const fetchLoginActivity = async () => {
       try {
-        const response = await fetch(`${api}/users/profile`, {
+        const response = await fetch(`${api}/users/profile/`, {
           method: "GET",
           headers: {
             Authorization: `Bearer ${tokenn}`,
@@ -148,25 +135,25 @@ const ProfileStatistics = () => {
     fetchLoginActivity();
   }, [profileData.id, t.loginError, t.userError]);
 
-  useEffect(() => {
-    if (selectedScience) {
-      const fetchTests = async () => {
-        try {
-          const response = await fetch(
-            `${api}/tests/?science=${selectedScience}`
-          );
-          if (!response.ok) throw new Error(t.testError);
-          const data = await response.json();
-          setTests(data);
-        } catch (error) {
-          console.error(error.message);
-        }
-      };
-      fetchTests();
-    } else {
-      setTests([]);
-    }
-  }, [selectedScience, t.testError]);
+  // useEffect(() => {
+  //   if (selectedScience) {
+  //     const fetchTests = async () => {
+  //       try {
+  //         const response = await fetch(
+  //           `${api}/tests/?science=${selectedScience}`
+  //         );
+  //         if (!response.ok) throw new Error(t.testError);
+  //         const data = await response.json();
+  //         setTests(data);
+  //       } catch (error) {
+  //         console.error(error.message);
+  //       }
+  //     };
+  //     fetchTests();
+  //   } else {
+  //     setTests([]);
+  //   }
+  // }, [selectedScience, t.testError]);
 
   useEffect(() => {
     const fetchTestStats = async () => {

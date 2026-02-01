@@ -80,7 +80,6 @@ const AccessProvider = ({ children }) => {
           }
           
           const data = await response.json();
-          console.log(data);
           
           setProfileData(data);
           

@@ -196,10 +196,8 @@ const TeachersTest = () => {
                 if (!response.ok) throw new Error("Network error");
 
                 const data = await response.json();
-                console.log(data);
 
                 setSubjects(data);
-                console.log(data);
 
             } catch (err) {
                 setError(err.message);
@@ -213,8 +211,7 @@ const TeachersTest = () => {
 
 
     const languageClass = getLanguageClass();
-    console.log(subjects);
-    
+
     return (
         <div className={`t-tests ${languageClass}`} id='subject-tests'>
 
