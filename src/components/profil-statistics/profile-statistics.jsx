@@ -116,6 +116,8 @@ const ProfileStatistics = () => {
           console.error(t.userError);
           return;
         }
+        console.log(data);
+        
         const loginDate = data.last_login.split("T")[0];
         const formattedLoginActivityLog = [
           {
@@ -158,67 +160,81 @@ const ProfileStatistics = () => {
   useEffect(() => {
     const fetchTestStats = async () => {
       try {
-        const response = await fetch(
-          `${api}/statistics/?user=${profileData.id}`
-        );
-        if (!response.ok) throw new Error(t.statsError);
-        const data = await response.json();
-        const userTests = data.filter(
-          (test) => Number(test.user) === Number(profileData.id)
-        );
-        const formattedTestActivityLog = userTests.map((test, index) => {
-          const timeOffset =
-            parseFloat(test.total_time_taken.split(":")[2]) || 0;
-          return {
-            date: test.created_at.split("T")[0],
-            scorePercentage: test.percentage_correct + timeOffset * 0.01,
-            testName: test.test_title,
-            totalTime: test.total_time_taken,
-            totalQuestions: test.total_questions,
-            correctAnswers: test.correct_answers,
-            incorrectAnswers: test.incorrect_answers,
-            unansweredQuestions: test.unanswered_questions,
-          };
+        const response = await fetch(`${api}/users/profile/`, {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${tokenn}`,
+            "Content-Type": "application/json",
+          },
         });
-        setTestActivityLog(formattedTestActivityLog);
+
+        if (!response.ok) throw new Error(t.statsError);
+        
+        const data = await response.json();
+        
+        // attempts_data'dan grafikka joylash uchun ma'lumot tayyorlash
+        if (data.attempts_data && Array.isArray(data.attempts_data)) {
+          const formattedTestActivityLog = data.attempts_data
+            .filter(attempt => attempt.finished_at) // Tugatilgan urinishlarni olish
+            .map((attempt) => {
+              const finishedDate = new Date(attempt.finished_at);
+              return {
+                date: finishedDate.toISOString().split("T")[0],
+                dateTime: finishedDate,
+                scorePercentage: attempt.percent || 0,
+                testName: attempt.test_name || "Noma'lum test",
+                totalTime: `${Math.round((new Date(attempt.ends_at) - new Date(attempt.started_at)) / 1000 / 60)} min`,
+                totalQuestions: attempt.total_questions,
+                correctAnswers: attempt.correct_answers,
+                earnedScore: attempt.earned_score,
+                totalScore: attempt.total_score,
+                status: attempt.status,
+                priceCharged: attempt.price_charged,
+              };
+            })
+            .sort((a, b) => new Date(a.dateTime) - new Date(b.dateTime)); // Eng eski birinchi
+          
+          setTestActivityLog(formattedTestActivityLog);
+          
+          // Yillarni to'plash
+          const years = new Set(formattedTestActivityLog.map(log => new Date(log.dateTime).getFullYear()));
+          setAvailableYears(Array.from(years).sort((a, b) => b - a));
+        }
       } catch (error) {
         console.error(error.message);
       }
     };
 
     fetchTestStats();
-  }, [profileData.id, t.statsError]);
-
-  const groupedData = testActivityLog.reduce((acc, log) => {
-    if (!acc[log.testName]) {
-      acc[log.testName] = [];
-    }
-    acc[log.testName].push(log);
-    return acc;
-  }, {});
+  }, [profileData.id, t.statsError, tokenn]);
 
   const lineChartData = {
     labels: testActivityLog.map((log) => log.date),
-    datasets: Object.keys(groupedData).map((testName, index) => {
-      const testLogs = groupedData[testName];
-      return {
-        label: testName,
-        data: testLogs.map((log) => ({
+    datasets: [
+      {
+        label: "Test Natijalari (%)",
+        data: testActivityLog.map((log) => ({
           x: log.date,
           y: log.scorePercentage,
           additionalInfo: log,
         })),
-        borderColor: `hsl(${index * 60}, 70%, 50%)`,
-        backgroundColor: `hsla(${index * 60}, 70%, 50%, 0.2)`,
-        fill: false,
+        borderColor: "rgba(75, 192, 192, 1)",
+        backgroundColor: "rgba(75, 192, 192, 0.2)",
+        borderWidth: 2,
+        fill: true,
         pointRadius: 6,
         pointHoverRadius: 8,
+        pointBackgroundColor: testActivityLog.map((log) => {
+          if (log.scorePercentage >= 80) return "rgba(75, 192, 75, 1)"; // Yashil - yaxshi
+          if (log.scorePercentage >= 50) return "rgba(255, 193, 7, 1)"; // Sariq - o'rtacha
+          return "rgba(255, 99, 99, 1)"; // Qizil - yomon
+        }),
         pointHoverBackgroundColor: "blue",
         pointHoverBorderColor: "black",
         pointHoverBorderWidth: 2,
-        spanGaps: false,
-      };
-    }),
+        tension: 0.3,
+      },
+    ],
   };
 
   return (

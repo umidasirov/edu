@@ -227,7 +227,7 @@ const Profile = () => {
                       <p className={`username ${getLanguageClass()}`}>{profileData.username}</p>
                     </div>
                   </div>
-                  <div className={`percent ${getLanguageClass()}`}>
+                  {/* <div className={`percent ${getLanguageClass()}`}>
                     <div className={`count ${getLanguageClass()}`}>{userRank?.percent || 0}%</div>
                     <div className={`line ${getLanguageClass()}`}>
                       <div
@@ -235,7 +235,7 @@ const Profile = () => {
                         style={{ width: `${userRank?.percent || 0}%` }}
                       ></div>
                     </div>
-                  </div>
+                  </div> */}
                   <div className={`logout-edit ${getLanguageClass()}`}>
                     <Link to="/edit-profile" className={getLanguageClass()}>{t.editProfile}</Link>
                     <button
